@@ -20,19 +20,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 var cpUpload = upload.fields([{ name: 'Image', maxCount: 1 }]);
 
-router.get('/findUser', jwtServices.verify, Controller.findUser)
-router.get('/findStaff', jwtServices.verify,checkRole([defaultRoles.Admin]), Controller.findStaff)
-router.post('/changePassword', jwtServices.verify, Validate.body(SchemaValidateAuth.changePassword), Controller.changePassword)
-router.post('/login', Validate.body(SchemaValidateAuth.login), Controller.login)
-router.post('/register', Validate.body(SchemaValidateAuth.register), Controller.register)
-router.post('/registerStaff',jwtServices.verify,checkRole([defaultRoles.Admin]),Validate.body(SchemaValidateAuth.registerStaff), Controller.registerStaff)
-router.post('/updateUser', jwtServices.verify,Validate.body(SchemaValidateUser.update), Controller.updateUser)
-router.post('/resetPassword', jwtServices.verify,checkRole([defaultRoles.Admin]), Validate.body(SchemaValidateAuth.resetPassword), Controller.resetPasswordAdmin)
-router.post('/updateImage', jwtServices.verify,cpUpload, Controller.updateImage)
-router.post('/updateShippingFee', jwtServices.verify,checkRole([defaultRoles.Admin]),Validate.body(SchemaValidateAuth.updateShippingFee),Controller.updateShippingFee)
-router.get('/findAllUser', jwtServices.verify,checkRole([defaultRoles.Admin]), Controller.findAllUser)
-router.get('/searchUser/:id', jwtServices.verify,Validate.param(SchemaValidateAuth.searchUser,'id'), Controller.searchUser)
-router.post('/editStaff', jwtServices.verify,checkRole([defaultRoles.Admin]), Controller.EditStaff)
+router.get('/findUser', jwtServices.verify, Controller.findUserByIdAsync)
+router.post('/changePassword', jwtServices.verify, Validate.body(SchemaValidateAuth.changePassword), Controller.changePasswordAsync)
+router.post('/login', Validate.body(SchemaValidateAuth.login), Controller.loginAsync)
+router.post('/register', Validate.body(SchemaValidateAuth.register), Controller.registerAsync)
+router.post('/updateUser', jwtServices.verify,Validate.body(SchemaValidateUser.update), Controller.updateUserAsync)
+router.post('/updateImage', jwtServices.verify,cpUpload, Controller.updateImageAsync)
+router.get('/findAllUser', jwtServices.verify,Controller.findAllUserAsync)
+router.get('/searchUser/:id', jwtServices.verify,Validate.param(SchemaValidateAuth.searchUser,'id'), Controller.searchUserAsync)
 
 
 

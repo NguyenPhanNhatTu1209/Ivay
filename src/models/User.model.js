@@ -6,23 +6,16 @@ const Schema = mongoose.Schema
 const USER = new Schema({
     AcademicLevel:defaultModel.number,
     Avatar:defaultModel.string,
-    BirthDate:defaultModel.date,
-
     CompanyName:defaultModel.string,
+
     CurrentAddress:defaultModel.string,
     CreatorUser:defaultModel.stringRef,
     FullAddress:defaultModel.string,
     
-    Gender:defaultModel.number,
-    IdentityCardFE:defaultModel.string,
-    IdentityCardHold:defaultModel.string,
-    IdentityCardTB:defaultModel.string,
-    
-    Name:defaultModel.string,
     MaritalStatus:defaultModel.number,
     MonthlyIncome:defaultModel.string,
-    
     Profession:defaultModel.string,
+    
     Role:defaultModel.number,
     
 },{timestamps:true})
