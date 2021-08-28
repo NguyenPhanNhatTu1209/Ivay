@@ -6,13 +6,13 @@ const Schema = mongoose.Schema
 
 
 const ACCOUNT = new Schema({
-  AppVersion: defaultModel.string,
-  CreatorUser: defaultModel.stringPhone,
-  DeviceModel: defaultModel.string,
+  appVersion: defaultModel.string,
+  creatorUser: defaultModel.stringPhone,
+  deviceModel: defaultModel.string,
 
-  DeviceUUid: defaultModel.string,
-  Fcm: defaultModel.string,
-  StatusDevice: defaultModel.number
+  deviceUUid: defaultModel.string,
+  fcm: defaultModel.string,
+  statusDevice: defaultModel.number
 
 }, {
   timestamps: true

@@ -4,15 +4,15 @@ const Schema = mongoose.Schema
 
 
 const IDENTITY_CARD = new Schema({
-    BirthDate:defaultModel.date,
-    CreatorUser:defaultModel.stringRef,
-    Gender:defaultModel.number,
+    birthDate:defaultModel.date,
+    creatorUser:defaultModel.stringRef,
+    gender:defaultModel.number,
 
-    IdentityCardFE:defaultModel.string,
-    IdentityCardHold:defaultModel.string,
-    IdentityCardTB:defaultModel.string,
+    identityCardFE:defaultModel.string,
+    identityCardHold:defaultModel.string,
+    identityCardTB:defaultModel.string,
     
-    Name:defaultModel.string,
+    name:defaultModel.string,
     
 },{timestamps:true})
 

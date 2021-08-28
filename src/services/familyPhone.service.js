@@ -1,6 +1,7 @@
 const { DFStatusLoan } = require('../config')
 const FAMILY_PHONE = require('../models/FamilyPhone.model')
-exports.createFamilyPhoneAsync = (body) => {
+const { updateUserAsync } = require('./user.services')
+exports.createFamilyPhoneAsync = async (body) => {
   try {
     const familyPhone = new FAMILY_PHONE(body)
     await familyPhone.save()
@@ -18,7 +19,7 @@ exports.createFamilyPhoneAsync = (body) => {
   }
 }
 
-exports.findAllFamilyPhoneAsync = () => {
+exports.findAllFamilyPhoneAsync = async () => {
   try {
     const familyPhones = await FAMILY_PHONE.find()
     return {
@@ -35,7 +36,7 @@ exports.findAllFamilyPhoneAsync = () => {
   }
 }
 
-exports.updateFamilyPhoneAsync = (id, body) => {
+exports.updateFamilyPhoneAsync = async (id, body) => {
   try {
     const familyPhone = await FAMILY_PHONE.findByIdAndUpdate(id, body, {
       new: true

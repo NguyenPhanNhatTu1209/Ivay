@@ -4,10 +4,10 @@ const Schema = mongoose.Schema
 
 
 const TYPE_LOAN = new Schema({
-  NameLoan:defaultModel.string,
-  InterestRate:defaultModel.string,
-  MonthLoan:defaultModel.number,
-  StatusTypeLoan:defaultModel.string
+  nameLoan:defaultModel.string,
+  interestRate:defaultModel.string,
+  monthLoan:defaultModel.number,
+  statusTypeLoan:defaultModel.string
     
 },{timestamps:true})
 

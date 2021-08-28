@@ -1,6 +1,6 @@
 const { DFStatusLoan } = require('../config')
-const IDENTITY_CARD = require('../models/IdentityCard.model')
-exports.createIdentityAsync = (body) => {
+const IDENTITY_CARD = require('../models/IdentityCard')
+exports.createIdentityAsync  = async (body)   =>  {
   try {
     const identity = new IDENTITY_CARD(body)
     await identity.save()
@@ -18,7 +18,7 @@ exports.createIdentityAsync = (body) => {
   }
 }
 
-exports.findAllIdentityAsync = () => {
+exports.findAllIdentityAsync = async () => {
   try {
     const identities = await IDENTITY_CARD.find()
     return {
@@ -35,7 +35,7 @@ exports.findAllIdentityAsync = () => {
   }
 }
 
-exports.updateIdentityAsync = (id, body) => {
+exports.updateIdentityAsync = async (id, body) => {
   try {
     const identity = await IDENTITY_CARD.findByIdAndUpdate(id, body, {
       new: true

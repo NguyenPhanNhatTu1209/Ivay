@@ -1,17 +1,18 @@
 const controller = require('./controller');
-// const authServices = require('../services/user.services');
+const authServices = require('../services/user.services');
 const identityServices = require('../services/identityCard.service');
 const accountBankServices= require('../services/accountBank.service');
 const familyPhoneServices= require('../services/familyPhone.service');
 const userServices=require('../services/user.services')
+const ACCOUNT = require('../models/Account.model');
+const { defaultRoles } = require('../config/defineModel');
 
 exports.registerAsync = async (req, res, next) => {
 	try {
-		const resServices = await authServices.register(req.value.body);
-		const admin = await USER.findOne({
+		const resServices = await authServices.registerUserAsync(req.value.body);
+		const admin = await ACCOUNT.findOne({
 			role: defaultRoles.Admin
 		})
-		console.log(admin._id);
 		if (!resServices.success)
 			return controller.sendSuccess(
 				res,
@@ -19,11 +20,11 @@ exports.registerAsync = async (req, res, next) => {
 				300,
 				resServices.message
 			);
-		const dataPush = Object.assign({}, {
-			action: "NEW_USER"
-		}, JSON.parse(JSON.stringify(resServices.data.user)))
-		console.log(dataPush);
-		pushNotification(`PT-Ship có khách hàng mới`, `Hãy đặt giá ship cho khách ngay nào`, "", converObjectFieldString(dataPush), admin.fcm)
+		// const dataPush = Object.assign({}, {
+		// 	action: "NEW_USER"
+		// }, JSON.parse(JSON.stringify(resServices.data.user)))
+		// console.log(dataPush);
+		// pushNotification(`PT-Ship có khách hàng mới`, `Hãy đặt giá ship cho khách ngay nào`, "", converObjectFieldString(dataPush), admin.fcm)
 
 		return controller.sendSuccess(
 			res,
@@ -32,13 +33,14 @@ exports.registerAsync = async (req, res, next) => {
 			resServices.message
 		);
 	} catch (err) {
+		console.log(err);
 		return controller.sendError(res);
 	}
 };
 
 exports.loginAsync = async (req, res, next) => {
 	try {
-		const resServices = await authServices.login(req.value.body);
+		const resServices = await authServices.loginAsync(req.value.body);
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
@@ -49,6 +51,7 @@ exports.loginAsync = async (req, res, next) => {
 			resServices.message
 		);
 	} catch (err) {
+		console.log(err)
 		return controller.sendError(res);
 	}
 };
@@ -97,7 +100,7 @@ exports.changePasswordAsync = async (req, res, next) => {
 			decodeToken
 		} = req.value.body;
 		const id = decodeToken.data;
-		const resServices = await authServices.changePassword(id, req.body);
+		const resServices = await authServices.changePasswordAsync(id, req.body);
 		if (!resServices.success) {
 			return controller.sendSuccess(
 				res,
@@ -125,10 +128,13 @@ exports.updateUserAsync = async (req, res, next) => {
 		const id = decodeToken.data;
 		console.log(`LHA:  ===> file: auth.controller.js ===> line 56 ===> id`, id);
 		let bodyUser = {
-			displayName: req.value.body.displayName,
-			address: req.value.body.address,
-			phone: req.value.body.phone,
-			avatar: req.value.body.avatar,
+			academicLevel: req.value.body.academicLevel,
+			companyName: req.value.body.companyName,
+			currentAddress: req.value.body.currentAddress,
+			fullAddress: req.value.body.fullAddress,
+			maritalStatus: req.value.body.maritalStatus,
+			monthlyIncome: req.value.body.monthlyIncome,
+			profession: req.value.body.profession,
 		}
 		const resServices = await authServices.updateUser(id, bodyUser);
 		if (!resServices.success) {
@@ -224,7 +230,7 @@ exports.createStepUser= async (req,res,next)=>{
 		const id = decodeToken.data;
 		delete req.value.body.decodeToken
 		const payload = Object.assign({
-			CreatorUser: id
+			creatorUser: id
 		}, req.value.body)
 		const resIdentity = await userServices.createUserAsync(payload)
 		return controller.sendSuccess(

@@ -6,13 +6,13 @@ const Schema = mongoose.Schema
 
 
 const LOAN = new Schema({
-  EndLoan: defaultModel.date,
-  InterestRate: defaultModel.number,
-  MonthLoan: defaultModel.string,
+  endLoan: defaultModel.date,
+  interestRate: defaultModel.number,
+  monthLoan: defaultModel.string,
 
-  StartLoan: defaultModel.date,
-  StatusLoan: defaultModel.number,
-  TotalLoanAmount: defaultModel.number
+  startLoan: defaultModel.date,
+  statusLoan: defaultModel.number,
+  totalLoanAmount: defaultModel.number
 }, {
   timestamps: true
 })

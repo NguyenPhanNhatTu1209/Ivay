@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { ACCESS_TOKEN_SECRET } = require("../config/index")
+const { configEnv } = require("../config/index")
 const verify = (req, res, next) => {
 	const header = req.headers.authorization;
   // console.log(`LHA:  ===> file: jwt.services.js ===> line 5 ===> header`, header)
@@ -13,7 +13,7 @@ const verify = (req, res, next) => {
 		return;
 	}
 	const token = header.split(' ')[1];
-	jwt.verify(token, ACCESS_TOKEN_SECRET, (err, decodedFromToken) => {
+	jwt.verify(token, configEnv.ACCESS_TOKEN_SECRET, (err, decodedFromToken) => {
 		if (err) {
 			res.status(403).json({
 				data: {
@@ -40,7 +40,7 @@ const createToken = (data) => {
 			iat: new Date().getTime(),
 			exp: new Date().setDate(new Date().getDate() + 1)
 		},
-		ACCESS_TOKEN_SECRET
+		configEnv.ACCESS_TOKEN_SECRET
 	);
 }
 

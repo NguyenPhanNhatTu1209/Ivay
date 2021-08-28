@@ -1,5 +1,5 @@
 const express = require('express')
-const { PORT } = require('./config')
+const { configEnv } = require('./config')
 const app = express()
 const db = require('./config/db')
 const route = require('./routes/index')
@@ -7,7 +7,6 @@ const morgan = require("morgan")
 const cookieParser = require("cookie-parser")
 const cors = require("cors")
 const server = require("http").Server(app);
-
 //connect db
 db.connect()
 
@@ -31,6 +30,6 @@ app.use(route)
 // socket.init();
 
 
-server.listen(PORT, () => {
-    console.log(`App running in port ${PORT}`)
+server.listen(configEnv.PORT, () => {
+    console.log(`App running in port ${configEnv.PORT}`)
 })

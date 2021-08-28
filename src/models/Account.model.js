@@ -4,9 +4,9 @@ const Schema = mongoose.Schema
 
 
 const ACCOUNT = new Schema({
-  Password:defaultModel.string,
-  Phone:defaultModel.stringPhone,
-  Verify:defaultModel.number
+  password:defaultModel.string,
+  phone:defaultModel.stringPhone,
+  verify:defaultModel.number
     
 },{timestamps:true})
 

@@ -4,10 +4,10 @@ const Schema = mongoose.Schema
 
 
 const ACCOUNT_BANK = new Schema({
-  AccountNumberBank:defaultModel.string,
-  CardBank:defaultModel.string,
-  CreatorUser:defaultModel.number,
-  NameBank:defaultModel.string
+  accountNumberBank:defaultModel.string,
+  cardBank:defaultModel.string,
+  creatorUser:defaultModel.number,
+  nameBank:defaultModel.string
     
 },{timestamps:true})
 

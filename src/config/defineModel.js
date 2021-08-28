@@ -11,7 +11,11 @@
   booleanFalse: { type: Boolean, default: false },
   object: { type: Object, default: {} },
 };
-
+const defaultRoles = {
+  Admin: 1,
+  User:0
+}
 module.exports ={
   defaultModel,
+  defaultRoles
 }

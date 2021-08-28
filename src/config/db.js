@@ -1,9 +1,9 @@
 const mongoose = require('mongoose')
-const { MONGO_URI } = require('./index')
+const { configEnv } = require('./index')
 
 async function connect() {
     try {
-         await mongoose.connect(MONGO_URI, {
+         await mongoose.connect(configEnv.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false,

@@ -4,11 +4,11 @@ const Schema = mongoose.Schema
 
 
 const FAMILY_PHONE = new Schema({
-    CreatorUser:defaultModel.number,
+    creatorUser:defaultModel.number,
 
-    FamilyRelationship:defaultModel.string,
-    PhoneName:defaultModel.string,
-    PhoneNumber:defaultModel.string,
+    familyRelationship:defaultModel.string,
+    phoneName:defaultModel.string,
+    phoneNumber:defaultModel.string,
     
 },{timestamps:true})
 

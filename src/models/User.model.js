@@ -4,19 +4,19 @@ const Schema = mongoose.Schema
 
 
 const USER = new Schema({
-    AcademicLevel:defaultModel.number,
-    Avatar:defaultModel.string,
-    CompanyName:defaultModel.string,
+    academicLevel:defaultModel.number,
+    avatar:defaultModel.string,
+    companyName:defaultModel.string,
 
-    CurrentAddress:defaultModel.string,
-    CreatorUser:defaultModel.stringRef,
-    FullAddress:defaultModel.string,
+    currentAddress:defaultModel.string,
+    creatorUser:defaultModel.stringRef,
+    fullAddress:defaultModel.string,
     
-    MaritalStatus:defaultModel.number,
-    MonthlyIncome:defaultModel.string,
-    Profession:defaultModel.string,
+    maritalStatus:defaultModel.number,
+    monthlyIncome:defaultModel.string,
+    profession:defaultModel.string,
     
-    Role:defaultModel.number,
+    role:defaultModel.number,
     
 },{timestamps:true})
 
