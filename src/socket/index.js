@@ -3,7 +3,7 @@ const {
 } = require("../config/defineModel");
 const jwt = require('jsonwebtoken')
 const chatSocket = require('./chat.socket');
-const { ACCESS_TOKEN_SECRET } = require("../config");
+const { configEnv } = require("../config");
 const ACCOUNT =require('../models/Account.model');
 const DEVICE = require('../models/Device.model')
 const USER = require('../models/User.model');
@@ -39,7 +39,7 @@ global.listUser = []
 
 exports.init = async () => {
   global.io.on('connection', async (socket) => {
-
+    console.log("abc");
     const header = socket.handshake.query.token;
     const fcm = socket.handshake.query.fcm; 
     console.log("header: ",header);
@@ -51,7 +51,7 @@ exports.init = async () => {
     }
     else{
       const token = header.split(' ')[1];
-    jwt.verify(token, ACCESS_TOKEN_SECRET, async (err, decodedFromToken) => {
+    jwt.verify(token, configEnv.ACCESS_TOKEN_SECRET, async (err, decodedFromToken) => {
       console.log("err",err)
       if (err) {
               io.sockets.sockets[socket.id].disconnect()
@@ -93,10 +93,10 @@ exports.init = async () => {
     }
 
 
-    console.log("connect Socket")
-    socket.on(defaultChatSocket.sendMessageCSS,(data)=> chatSocket.chatMessage(socket,data))
-    socket.on(defaultChatSocket.joinRoomCSS, (data) => chatSocket.joinRoom(socket, data))
-    socket.on(defaultChatSocket.leaveRoomCSS, (data) => chatSocket.leaveRoom(socket, data))
+    console.log("connect Socket",global.listUser.length)
+    // socket.on(defaultChatSocket.sendMessageCSS,(data)=> chatSocket.chatMessage(socket,data))
+    // socket.on(defaultChatSocket.joinRoomCSS, (data) => chatSocket.joinRoom(socket, data))
+    // socket.on(defaultChatSocket.leaveRoomCSS, (data) => chatSocket.leaveRoom(socket, data))
 
     socket.on('disconnect', async function () {
       // let index = global.listUser.findIndex((e)=>{

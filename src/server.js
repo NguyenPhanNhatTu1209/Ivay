@@ -23,11 +23,11 @@ app.get('/healCheck', (req, res) => res.status(200).json({hello : 'Welcome to IV
 app.use(route)
 
 
-// const socket = require('./socket');
+const socket = require('./socket');
 
-// global.io = require('socket.io').listen(server);
+global.io = require('socket.io').listen(server);
 
-// socket.init();
+socket.init();
 
 
 server.listen(configEnv.PORT, () => {
