@@ -1,4 +1,6 @@
-const { DFStatusLoan } = require('../config')
+const {
+  DFStatusLoan
+} = require('../config')
 const DEVICE = require('../models/Device.model')
 exports.createDeviceAsync = async (body) => {
   try {
@@ -23,12 +25,12 @@ exports.findAllDevoceByCreatorUser = async (body) => {
   try {
     const devices = await DEVICE.findOne(body)
     if (!devices) {
-			return {
-				message: 'Get devices Fail',
-				success: false,
-				data: null
-			};
-		}
+      return {
+        message: 'Get devices Fail',
+        success: false,
+        data: null
+      };
+    }
     return {
       message: 'Successfully get devices',
       success: true,
@@ -46,7 +48,10 @@ exports.findAllDevoceByCreatorUser = async (body) => {
 exports.updateDeviceAsync = async (id, body) => {
   try {
     console.log(body)
-    const device = await DEVICE.findOneAndUpdate({_id: id,creatorUser: body.creatorUser}, body, {
+    const device = await DEVICE.findOneAndUpdate({
+      _id: id,
+      creatorUser: body.creatorUser
+    }, body, {
       new: true
     })
     console.log(device);
@@ -61,5 +66,16 @@ exports.updateDeviceAsync = async (id, body) => {
       message: 'An error occurred',
       success: false
     }
+  }
+}
+exports._getFcm = async (id) => {
+  try {
+    const fcm = await DEVICE.findOne({
+      creatorUser: id
+    }).select("fcm")
+    return fcm.fcm
+  } catch (e) {
+    console.log(e)
+    return null
   }
 }

@@ -3,7 +3,7 @@ const aws = require("aws-sdk");
 const { optional } = require('@hapi/joi');
 const { ConnectionStates } = require('mongoose');
 
-exports.uploadImageS3 = async (body,expries = 300) => {
+exports.uploadImageS3 = async (body,expires = 300) => {
 	try {
 		var s3 = new aws.S3({
 			accessKeyId: configEnv.AWS_ACCESS_KEY,
@@ -14,7 +14,7 @@ exports.uploadImageS3 = async (body,expries = 300) => {
 		const s3Params = {
 			Bucket: configEnv.BUCKET,
 			Key: body.name,
-			Expires: expries,
+			Expires: expires,
 			ContentType: body.type
 		};
 		const signedUrl = await s3.getSignedUrl('putObject', s3Params);
@@ -25,7 +25,7 @@ exports.uploadImageS3 = async (body,expries = 300) => {
 	}
 };
 
-exports.getImageS3 = async (body,expries = 300) => {
+exports.getImageS3 = async (body,expires = 300) => {
 	try {
 		var s3 = new aws.S3({
 			accessKeyId: configEnv.AWS_ACCESS_KEY,
@@ -36,7 +36,7 @@ exports.getImageS3 = async (body,expries = 300) => {
 		const s3Params = {
 			Bucket: configEnv.BUCKET,
 			Key: body,
-			Expires: expries,
+			Expires: expires,
 		};
 		const signedUrl = await s3.getSignedUrl('getObject', s3Params);
 		return signedUrl;

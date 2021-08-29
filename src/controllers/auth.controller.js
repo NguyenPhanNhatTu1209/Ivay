@@ -1,12 +1,36 @@
 const controller = require('./controller');
 const authServices = require('../services/user.services');
 const identityServices = require('../services/identityCard.service');
-const accountBankServices= require('../services/accountBank.service');
-const familyPhoneServices= require('../services/familyPhone.service');
-const userServices=require('../services/user.services')
+const accountBankServices = require('../services/accountBank.service');
+const familyPhoneServices = require('../services/familyPhone.service');
+const userServices = require('../services/user.services')
 const ACCOUNT = require('../models/Account.model');
-const { defaultRoles } = require('../config/defineModel');
+const {
+	defaultRoles
+} = require('../config/defineModel');
 
+exports.exitsPhoneAsync = async (req, res, next) => {
+	try {
+		const phone=req.query.phone
+		const resServices = await userServices.existPhoneAsync({phone});
+		if (!resServices.success)
+			return controller.sendSuccess(
+				res,
+				resServices.data,
+				300,
+				resServices.message
+			);
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			200,
+			resServices.message
+		);
+	} catch (e) {
+		console.log(err);
+		return controller.sendError(res);
+	}
+}
 exports.registerAsync = async (req, res, next) => {
 	try {
 		const resServices = await authServices.registerUserAsync(req.value.body);
@@ -222,7 +246,7 @@ exports.findAllUserAsync = async (req, res, next) => {
 
 
 // ==== New Code
-exports.createStepUser= async (req,res,next)=>{
+exports.createStepUser = async (req, res, next) => {
 	try {
 		const {
 			decodeToken
@@ -318,7 +342,7 @@ exports.createStepFamilyPhone = async (req, res, next) => {
 	}
 }
 
-exports.updateStepUser=async (req,res,next)=>{
+exports.updateStepUser = async (req, res, next) => {
 	try {
 		const {
 			decodeToken
@@ -328,7 +352,7 @@ exports.updateStepUser=async (req,res,next)=>{
 		const payload = Object.assign({
 			CreatorUser: id
 		}, req.value.body)
-		const resServices = await userServices.updateUserAsync(id,payload)
+		const resServices = await userServices.updateUserAsync(id, payload)
 		return controller.sendSuccess(
 			res,
 			resServices.data,
