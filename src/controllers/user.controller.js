@@ -412,6 +412,7 @@ exports.getAllInformationUser = async (req, res, next) => {
 			identityCardResult = "";
 		}
 		let resServices = {
+			idAccount: account.data._id,
 			phone: account.data.phone,
 			user: userResult,
 			identityCard: identityCardResult,
