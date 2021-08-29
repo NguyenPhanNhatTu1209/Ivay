@@ -3,6 +3,7 @@ const ACCOUNT = require('../models/Account.model');
 const bcrypt = require('bcryptjs');
 const jwtServices = require('./jwt.services');
 const { defaultRoles } = require('../config/defineModel');
+const AccountModel = require('../models/Account.model');
 
 exports.registerUserAsync = async body => {
 	try {
@@ -76,6 +77,28 @@ exports.loginAsync = async body => {
 	}
 };
 
+exports.findAccountById = async body => {
+	try {
+		const account = await AccountModel.findById(body);
+		if (!account) {
+			return {
+				message: 'Get Account Fail',
+				success: false
+			};
+		}
+		return {
+			message: 'Successfully Get Account',
+			success: true,
+			data: account
+		};
+	} catch (err) {
+		return {
+			message: 'An error occurred',
+			success: false
+		};
+	}
+};
+
 exports.findUserByIdAsync = async body => {
 	try {
 		const user = await USER.findById(body);
@@ -99,7 +122,7 @@ exports.findUserByIdAsync = async body => {
 };
 exports.findUserByCreatorUser = async body => {
 	try {
-		const user = await USER.findOne(body);
+		const user = await USER.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0,creatorUser:0});
 		if (!user) {
 			return {
 				message: 'Get User Fail',

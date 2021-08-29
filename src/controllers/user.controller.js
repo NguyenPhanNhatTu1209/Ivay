@@ -209,7 +209,7 @@ exports.createStepFamilyPhone = async (req, res, next) => {
 			},
 			req.value.body
 		);
-		const resServices = await familyPhoneServices.updateFamilyPhoneAsync(
+		const resServices = await familyPhoneServices.createFamilyPhoneAsync(
 			payload
 		);
 		if (resServices.success) {
@@ -368,17 +368,17 @@ exports.getAllInformationUser = async (req, res, next) => {
 		const { decodeToken } = req.value.body;
 		const id = decodeToken.data;
 		const payload ={creatorUser: id}
+		const account = await userServices.findAccountById(id);
 		const resServicesUser = await userServices.findUserByCreatorUser(payload);
 		const resServicesIdentityCard = await identityServices.findAllIdentityByCreatorUser(payload);
 		const resServicesFamilyPhone = await familyPhoneServices.findAllFamilyPhoneByCreatorUser(payload);
 		const resServicesAccountBank = await accountBankServices.findAllAccountBankByCreatorUser(payload);
 		let identityCardResult;
-		let userResult = resServicesIdentityCard.data;
+		let userResult = resServicesUser.data;
 		let familyPhoneResult = resServicesFamilyPhone.data;
 		let accountBankResult = resServicesAccountBank.data;
 		if(resServicesUser.data == null)
 		{
-			console.log("abc")
 			userResult = ""
 		}
 		if(resServicesIdentityCard.data == null)
@@ -387,7 +387,6 @@ exports.getAllInformationUser = async (req, res, next) => {
 			familyPhoneResult = ""
 		if(resServicesAccountBank.data == null)
 			accountBankResult = ""
-		console.log(resServicesUser.data)
 		if(identityCardResult!="")
 		{
 			let arr = [resServicesIdentityCard.data.identityCardFE,resServicesIdentityCard.data.identityCardHold,resServicesIdentityCard.data.identityCardTB];
@@ -409,12 +408,12 @@ exports.getAllInformationUser = async (req, res, next) => {
 			identityCardResult = "";
 		}
 		let resServices = {
+			phone: account.data.phone,
 			user: userResult,
 			identityCard: identityCardResult,
 			familyPhone: familyPhoneResult,
 			resServicesAccountBank: accountBankResult
 		}
-		console.log(resServices)
 			return controller.sendSuccess(
 				res,
 				resServices,

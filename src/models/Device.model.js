@@ -5,7 +5,7 @@ const {
 const Schema = mongoose.Schema
 
 
-const ACCOUNT = new Schema({
+const DEVICE = new Schema({
   appVersion: defaultModel.string,
   creatorUser: defaultModel.stringPhone,
   deviceModel: defaultModel.string,
@@ -18,4 +18,4 @@ const ACCOUNT = new Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('ACCOUNT', ACCOUNT)
+module.exports = mongoose.model('DEVICE', DEVICE)

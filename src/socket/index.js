@@ -29,6 +29,11 @@ exports.findUserById=(socketId)=>{
     return e.socket===socketId
   });
 }
+exports.findUserBySocket=(socketId)=>{
+  return global.listUser.find((e)=>{
+    return e.socket===socketId
+  });
+}
 
 global.listUser = []
 
@@ -80,7 +85,7 @@ exports.init = async () => {
             }
           })
           // await USER.findOneAndUpdate({_id: decodedFromToken.data},{fcm: fcm},{new:true})
-          global.listUser.push({socket: socket.id, fcm, userId:decodedFromToken.data,role:user.role, deviceId: deviceId});
+          global.listUser.push({socket: socket.id, fcm, userId:decodedFromToken.data,deviceId: deviceId});
           console.log(`LHA:  ===> file: index.js ===> line 62 ===> global.listUser`, global.listUser)
         }
       }
@@ -93,12 +98,16 @@ exports.init = async () => {
     socket.on(defaultChatSocket.joinRoomCSS, (data) => chatSocket.joinRoom(socket, data))
     socket.on(defaultChatSocket.leaveRoomCSS, (data) => chatSocket.leaveRoom(socket, data))
 
-    socket.on('disconnect', function () {
-      let index = global.listUser.findIndex((e)=>{
-        return e.socket===socket.id
-      });
-      deviceId = global.listUser[index].deviceId;
-      await DEVICE.findOneAndUpdate({_id: deviceId},{status:0},{new:true})
+    socket.on('disconnect', async function () {
+      // let index = global.listUser.findIndex((e)=>{
+      //   return e.socket===socket.id
+      // });
+      // deviceId = global.listUser[index].deviceId;
+      const user = findUserBySocket(socket.id);
+      if(user)
+      {
+        await DEVICE.findOneAndUpdate({_id: user.deviceId},{status:0})
+      }
       global.listUser=global.listUser.filter(e=>e.socket!==socket.id)
       console.log("Disconnect Socket")
     })

@@ -42,7 +42,10 @@ exports.findAllIdentityAsync = async () => {
 }
 exports.findAllIdentityByCreatorUser = async (body) => {
   try {
-    const identities = await IDENTITY_CARD.findOne(body);
+    const identities = await IDENTITY_CARD.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0,creatorUser:0});
+    console.log("identities");
+    console.log(identities);
+    
     return {
       message: 'Successfully update user',
       success: true,

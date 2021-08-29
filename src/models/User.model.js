@@ -7,15 +7,14 @@ const USER = new Schema({
     academicLevel:defaultModel.number,
     avatar:defaultModel.string,
     companyName:defaultModel.string,
-
-    currentAddress:defaultModel.string,
+    quantityChildren: defaultModel.number,
+    city: defaultModel.number,
+    distric: defaultModel.number,
     creatorUser:defaultModel.stringRef,
     fullAddress:defaultModel.string,
-    
     maritalStatus:defaultModel.number,
-    monthlyIncome:defaultModel.string,
-    profession:defaultModel.string,
-    
+    monthlyIncome:defaultModel.number,
+    profession:defaultModel.number,
     role:defaultModel.number,
     
 },{timestamps:true})

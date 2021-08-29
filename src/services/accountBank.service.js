@@ -41,7 +41,7 @@ exports.findAllAccountBankAsync = async () => {
 };
 exports.findAllAccountBankByCreatorUser = async (body) => {
 	try {
-		const identities = await ACCOUNT_BANK.findOne(body);
+		const identities = await ACCOUNT_BANK.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0,creatorUser:0});
 		if (!identities) {
 			return {
 				message: 'Get identities Fail',

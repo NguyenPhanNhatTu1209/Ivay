@@ -37,7 +37,7 @@ exports.findAllFamilyPhoneAsync = async () => {
 }
 exports.findAllFamilyPhoneByCreatorUser = async (body) => {
   try {
-    const familyPhones = await FAMILY_PHONE.findOne(body)
+    const familyPhones = await FAMILY_PHONE.find(body,{_id:1,createdAt:0,__v:0,updatedAt:0,creatorUser:0})
     if (!familyPhones) {
 			return {
 				message: 'Get Family Phone Fail',
@@ -62,6 +62,7 @@ exports.findAllFamilyPhoneByCreatorUser = async (body) => {
 exports.updateFamilyPhoneAsync = async (id, body) => {
   try {
     console.log(body)
+    console.log(body);
     const familyPhone = await FAMILY_PHONE.findOneAndUpdate({_id: id,creatorUser: body.creatorUser}, body, {
       new: true
     })
