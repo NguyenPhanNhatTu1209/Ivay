@@ -1,6 +1,6 @@
 const { DFStatusLoan } = require('../config')
 const LOAN = require('../models/Loan.model')
-exports.createLoanAsync = (body) => {
+exports.createLoanAsync =async (body) => {
   try {
     const loan = new LOAN(body)
     await loan.save()
@@ -18,7 +18,7 @@ exports.createLoanAsync = (body) => {
   }
 }
 
-exports.findAllLoanAsync = () => {
+exports.findAllLoanAsync =async () => {
   try {
     const loans = await LOAN.find()
     return {
@@ -35,7 +35,7 @@ exports.findAllLoanAsync = () => {
   }
 }
 
-exports.updateLoanAsync = (id, body) => {
+exports.updateLoanAsync =async (id, body) => {
   try {
     const loan = await LOAN.findByIdAndUpdate(id, body, {
       new: true
@@ -54,7 +54,7 @@ exports.updateLoanAsync = (id, body) => {
   }
 }
 
-exports.deleteLoanAsync=(id)=>{
+exports.deleteLoanAsync=async(id)=>{
   try {
     const loan = await LOAN.findByIdAndUpdate(id, {statusLoan:DFStatusLoan.inActive}, {
       new: true
@@ -73,7 +73,7 @@ exports.deleteLoanAsync=(id)=>{
   }
 }
 
-exports.changeStatusLoanAsync=(id,status)=>{
+exports.changeStatusLoanAsync=async(id,status)=>{
   try {
     const loan = await LOAN.findByIdAndUpdate(id, {statusLoan:status}, {
       new: true
