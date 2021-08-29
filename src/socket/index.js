@@ -61,10 +61,9 @@ exports.init = async () => {
         const account=await ACCOUNT.findById(decodedFromToken.data)
         if(account)
         {
-          const user = await USER.findOne({creatorUser: account._id})
           let deviceId;
           socket.on("UPDATE_DEVICE_CSS",async (data)=>{
-            const device = DEVICE.findOne({deviceUUid: data.deviceUUid, creatorUser: account._id})
+            const device = await DEVICE.findOne({deviceUUid: data.deviceUUid, creatorUser: account._id})
             if(device!= null)
             {
               deviceId = device._id;
