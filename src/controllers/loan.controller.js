@@ -13,25 +13,25 @@ exports.createSpendingLoanAsync = async (req, res, next) => {
 			creatorUser: id
 		})
 
-		// const resServices = await spendingLoanServices.createSpendingLoanAsync(payload);
-		// if (!resServices.success)
-		// 	return controller.sendSuccess(
-		// 		res,
-		// 		resServices.data,
-		// 		300,
-		// 		resServices.message
-		// 	); 
+		const resServices = await spendingLoanServices.createSpendingLoanAsync(payload);
+		if (!resServices.success)
+			return controller.sendSuccess(
+				res,
+				resServices.data,
+				300,
+				resServices.message
+			); 
 
 		// const dataPush=Object.assign({},{action:"NEW_USER"},JSON.parse(JSON.stringify(resServices.data.user)))
 		// console.log(dataPush);
 		// pushNotification(`PT-Ship có khách hàng mới`,`Hãy đặt giá ship cho khách ngay nào`,"",converObjectFieldString(dataPush),admin.fcm)
-		//Push notification cho admin
-		// return controller.sendSuccess(
-		// 	res,
-		// 	resServices.data,
-		// 	200,
-		// 	resServices.message
-		// );
+		// Push notification cho admin
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			200,
+			resServices.message
+		);
 		return controller.sendSuccess(
 			res,
 			resServices.data,
@@ -50,6 +50,7 @@ exports.findTypeLoanAsync = async (req, res, next) => {
 			limit: req.query.limit || 15
 		}
 		const resServices = await typeLoanServices.findTypeLoanAsync(query);
+    console.log(`LHA:  ===> file: loan.controller.js ===> line 53 ===> resServices`, resServices)
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
@@ -60,6 +61,7 @@ exports.findTypeLoanAsync = async (req, res, next) => {
 			resServices.message
 		);
 	} catch (err) {
+		console.log(err)
 		return controller.sendError(res);
 	}
 }
@@ -72,8 +74,7 @@ exports.createTypeLoanAsync = async (req, res, next) => {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
 		return controller.sendSuccess(
-			res,
-			{},
+			res, {},
 			200,
 			resServices.message
 		);
@@ -83,6 +84,42 @@ exports.createTypeLoanAsync = async (req, res, next) => {
 	}
 }
 
+
+exports.acceptLoanByAdminAsync = async (req, res, next) => {
+	try {
+		const payload = req.query.idSpendingLoan
+		const resServices = await loanServices.createLoanAsync(payload)
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
+		return controller.sendSuccess(
+			res, {},
+			200,
+			resServices.message
+		);
+	} catch (e) {
+		console.log(e)
+		return controller.sendError(res)
+	}
+}
+
+exports.deletedLoanByAdminAsync=async (req,res,next)=>{
+	try {
+		const payload = req.query.idLoan
+		const resServices = await loanServices.deleteLoanAsync(payload)
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
+		return controller.sendSuccess(
+			res, {},
+			200,
+			resServices.message
+		);
+	} catch (e) {
+		console.log(e)
+		return controller.sendError(res)
+	}
+}
 // exports.createTypeLoanAsync=(req,res,next)=>{
 // 	try {
 // 		const resServices = await loanServices.findAllLoanAsync();

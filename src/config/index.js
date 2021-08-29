@@ -52,7 +52,8 @@ const DFStatusLoanValue = ['InActive', 'Active'];
 
 const DFStatusLoan = {
 	inActive: 0,
-	active: 1
+	active: 1,
+	deleted:2
 };
 
 const DFStatusTypeLoanValue = ['InActive', 'Active', 'Deleted'];

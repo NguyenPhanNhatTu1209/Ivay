@@ -93,7 +93,7 @@ exports.init = async () => {
     socket.on(defaultChatSocket.joinRoomCSS, (data) => chatSocket.joinRoom(socket, data))
     socket.on(defaultChatSocket.leaveRoomCSS, (data) => chatSocket.leaveRoom(socket, data))
 
-    socket.on('disconnect', function () {
+    socket.on('disconnect',async function () {
       let index = global.listUser.findIndex((e)=>{
         return e.socket===socket.id
       });

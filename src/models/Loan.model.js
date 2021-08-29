@@ -7,8 +7,7 @@ const Schema = mongoose.Schema
 
 const LOAN = new Schema({
   endLoan: defaultModel.date,
-  interestRate: defaultModel.number,
-  monthLoan: defaultModel.string,
+  typeLoan:defaultModel.stringRef,
 
   startLoan: defaultModel.date,
   statusLoan: defaultModel.number,

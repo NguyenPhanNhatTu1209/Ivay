@@ -4,6 +4,7 @@ const {
 const TYPE_LOAN = require('../models/TypeLoan.model')
 exports.createTypeLoanAsync = async (body) => {
   try {
+    body.statusTypeLoan=DFStatusTypeLoan.active
     const typeLoan = new TYPE_LOAN(body)
     await typeLoan.save()
     return {
@@ -20,13 +21,13 @@ exports.createTypeLoanAsync = async (body) => {
   }
 }
 
-exports.findTypeLoanAsync = (query) => {
+exports.findTypeLoanAsync =async (query) => {
   try {
-    const typeLoans = TYPE_LOAN.find({
-      status: DFStatusTypeLoan.active
+    const typeLoans =await TYPE_LOAN.find({
+      statusTypeLoan: DFStatusTypeLoan.active
     }).sort({
       monthLoan: -1
-    }).skip(query.skip).limit(query.limit)
+    }).skip(Number(query.skip)).limit(Number(query.limit))
     return {
       message: 'Successfully create Type Loan',
       success: true,

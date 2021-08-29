@@ -26,7 +26,7 @@ router.post('/updateUser', jwtServices.verify,Validate.body(SchemaValidateUser.u
 router.post('/updateImage', jwtServices.verify,cpUpload, Controller.updateImageAsync)
 router.get('/findAllUser', jwtServices.verify,Controller.findAllUserAsync)
 router.get('/searchUser/:id', jwtServices.verify,Validate.param(SchemaValidateAuth.searchUser,'id'), Controller.searchUserAsync)
-router.get('/exitsPhone',Controller.exitsPhoneAsync)
+
 
 
 module.exports = router
