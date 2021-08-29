@@ -108,15 +108,16 @@ exports.createStepIdentity = async (req, res, next) => {
 		const { decodeToken } = req.value.body;
 		const id = decodeToken.data;
 		delete req.value.body.decodeToken;
-		req.value.body.identityCardFEName = `IdentityCardFE/${id}-${req.value.body.identityCardFEName}`;
-		req.value.body.identityCardHoldName = `IdentityCardHold/${id}-${req.value.body.identityCardHoldName}`;
-		req.value.body.identityCardTBName = `IdentityCardTB/${id}-${req.value.body.identityCardTBName}`;
 		const payload = Object.assign(
 			{
-				CreatorUser: id
+				CreatorUser: id,
+				identityCardTB: `IdentityCardFE/${id}`,
+				identityCardHold: `IdentityCardHold/${id}`,
+				identityCardFE: `IdentityCardTB/${id}`
 			},
 			req.value.body
 		);
+		console.log(payload);
 		const resServices = await identityServices.createIdentityAsync(payload);
 		if (resServices.success) {
 			return controller.sendSuccess(
@@ -146,7 +147,7 @@ exports.uploadStepIdentity = async (req, res, next) => {
 		const types = req.query.image;
 		let arr = [
 			{ name: `IdentityCardFE/${id}`, type: types[0] },
-			{ name: `IdentityCardFE/${id}`, type: types[1] },
+			{ name: `IdentityCardHold/${id}`, type: types[1] },
 			{ name: `IdentityCardTB/${id}`, type: types[2] }
 		];
 		data = [];

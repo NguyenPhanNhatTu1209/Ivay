@@ -10,5 +10,6 @@ const router = express.Router()
 router.post('/createStepUser', jwtServices.verify,Validate.body(SchemaValidateAuth.createStepUser), Controller.createStepUser)
 router.post('/updateStepUser', jwtServices.verify,Validate.body(SchemaValidateAuth.updateStepUser), Controller.updateStepUser)
 router.get('/uploadStepIdentity', jwtServices.verify, Controller.uploadStepIdentity)
+router.post('/createStepIdentity', jwtServices.verify,Validate.body(SchemaValidateAuth.createStepIdentity), Controller.createStepIdentity)
 
 module.exports = router
