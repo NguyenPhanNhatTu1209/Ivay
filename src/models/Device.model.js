@@ -7,9 +7,8 @@ const Schema = mongoose.Schema
 
 const DEVICE = new Schema({
   appVersion: defaultModel.string,
-  creatorUser: defaultModel.stringPhone,
+  creatorUser: defaultModel.stringRef,
   deviceModel: defaultModel.string,
-
   deviceUUid: defaultModel.string,
   fcm: defaultModel.string,
   statusDevice: defaultModel.number
