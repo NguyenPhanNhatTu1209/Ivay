@@ -263,7 +263,7 @@ exports.createUserAsync = async body => {
 
 exports._findAdminByRoleAsync = async () => {
 	try {
-		const user = await USER.findOne({
+		const user = await ACCOUNT.findOne({
 			role: DFRole.admin
 		})
 		return user

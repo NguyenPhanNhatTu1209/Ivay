@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken')
 const { ACCESS_TOKEN_SECRET } = require("../config/index");
-const User = require('../models/User.model');
+const ACCOUNT = require('../models/Account.model');
 const checkRole = (roles = [])=> async (req, res, next) => {
   const { decodeToken } = req.value.body;
   const userId = decodeToken.data;
   console.log(userId);
-  const user = await User.findById(userId);
+  const user = await ACCOUNT.findById(userId);
   if(roles.includes(user.role))
   {
     next();

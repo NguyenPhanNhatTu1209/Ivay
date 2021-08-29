@@ -14,9 +14,7 @@ const USER = new Schema({
     fullAddress:defaultModel.string,
     maritalStatus:defaultModel.number,
     monthlyIncome:defaultModel.number,
-    profession:defaultModel.number,
-    role:defaultModel.number,
-    
+    profession:defaultModel.number,    
 },{timestamps:true})
 
 module.exports = mongoose.model('USER', USER)

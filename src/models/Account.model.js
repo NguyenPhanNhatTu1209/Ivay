@@ -6,7 +6,8 @@ const Schema = mongoose.Schema
 const ACCOUNT = new Schema({
   password:defaultModel.string,
   phone:defaultModel.stringPhone,
-  verify:defaultModel.number
+  verify:defaultModel.number,
+  role:defaultModel.number,
     
 },{timestamps:true})
 
