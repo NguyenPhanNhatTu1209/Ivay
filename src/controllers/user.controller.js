@@ -369,8 +369,10 @@ exports.getAllInformationUser = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
 		const id = decodeToken.data;
+		console.log(id);
 		const payload ={creatorUser: id}
 		const account = await userServices.findAccountById(id);
+		console.log(account)
 		const resServicesUser = await userServices.findUserByCreatorUser(payload);
 		const resServicesIdentityCard = await identityServices.findAllIdentityByCreatorUser(payload);
 		const resServicesFamilyPhone = await familyPhoneServices.findAllFamilyPhoneByCreatorUser(payload);

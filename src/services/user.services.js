@@ -116,7 +116,7 @@ exports.loginAsync = async body => {
 
 exports.findAccountById = async body => {
 	try {
-		const account = await AccountModel.findById(body);
+		const account = await ACCOUNT.findById(body);
 		if (!account) {
 			return {
 				message: 'Get Account Fail',
