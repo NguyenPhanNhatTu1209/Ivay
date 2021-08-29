@@ -35,7 +35,7 @@ exports.getImageS3 = async (body,expries = 300) => {
 		});
 		const s3Params = {
 			Bucket: configEnv.BUCKET,
-			Key: body.name,
+			Key: body,
 			Expires: expries,
 		};
 		const signedUrl = await s3.getSignedUrl('getObject', s3Params);

@@ -81,7 +81,7 @@ exports.createStepUser = async (req, res, next) => {
 			},
 			req.value.body
 		);
-		const resIdentity = await userServices.createUserAsync(payload);
+		const resServices = await userServices.createUserAsync(payload);
 		if (resServices.success) {
 			return controller.sendSuccess(
 				res,
@@ -110,7 +110,7 @@ exports.createStepIdentity = async (req, res, next) => {
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
-				CreatorUser: id,
+				creatorUser: id,
 				identityCardTB: `IdentityCardFE/${id}`,
 				identityCardHold: `IdentityCardHold/${id}`,
 				identityCardFE: `IdentityCardTB/${id}`
@@ -170,11 +170,11 @@ exports.createStepAccountBank = async (req, res, next) => {
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
-				CreatorUser: id
+				creatorUser: id
 			},
 			req.value.body
 		);
-		const resIdentity = await accountBankServices.createAccountBankAsync(
+		const resServices = await accountBankServices.createAccountBankAsync(
 			payload
 		);
 		if (resServices.success) {
@@ -205,11 +205,11 @@ exports.createStepFamilyPhone = async (req, res, next) => {
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
-				CreatorUser: id
+				creatorUser: id
 			},
 			req.value.body
 		);
-		const resIdentity = await familyPhoneServices.createFamilyPhoneAsync(
+		const resServices = await familyPhoneServices.updateFamilyPhoneAsync(
 			payload
 		);
 		if (resServices.success) {
@@ -240,7 +240,7 @@ exports.updateStepUser = async (req, res, next) => {
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
-				CreatorUser: id
+				creatorUser: id
 			},
 			req.value.body
 		);
@@ -259,6 +259,174 @@ exports.updateStepUser = async (req, res, next) => {
 			300,
 			resServices.message
 		);
+	} catch (error) {
+		// bug
+		console.log(error);
+		return controller.sendError(res);
+	}
+};
+exports.updateStepIdentity = async (req, res, next) => {
+	try {
+		const { decodeToken } = req.value.body;
+		const id = decodeToken.data;
+		delete req.value.body.decodeToken;
+		const payload = Object.assign(
+			{
+				creatorUser: id
+			},
+			req.value.body
+		);
+		const resServices = await identityServices.updateIdentityAsync(id, payload);
+		if (resServices.success) {
+			return controller.sendSuccess(
+				res,
+				resServices.data,
+				200,
+				resServices.message
+			);
+		}
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			300,
+			resServices.message
+		);
+	} catch (error) {
+		// bug
+		console.log(error);
+		return controller.sendError(res);
+	}
+};
+exports.updateStepAccountBank = async (req, res, next) => {
+	try {
+		const { decodeToken } = req.value.body;
+		const id = decodeToken.data;
+		delete req.value.body.decodeToken;
+		const payload = Object.assign(
+			{
+				creatorUser: id
+			},
+			req.value.body
+		);
+		console.log(id);	
+		const resServices = await accountBankServices.updateAccountBankAsync(id, payload);
+		if (resServices.success) {
+			return controller.sendSuccess(
+				res,
+				resServices.data,
+				200,
+				resServices.message
+			);
+		}
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			300,
+			resServices.message
+		);
+	} catch (error) {
+		// bug
+		console.log(error);
+		return controller.sendError(res);
+	}
+};
+exports.updateStepFamilyPhone = async (req, res, next) => {
+	try {
+		const { decodeToken } = req.value.body;
+		const id = decodeToken.data;
+		delete req.value.body.decodeToken;
+		const payload = Object.assign(
+			{
+				creatorUser: id
+			},
+			req.value.body
+		);
+		console.log(id);	
+		const resServices = await familyPhoneServices.updateFamilyPhoneAsync(req.value.body.id, payload);
+		if (resServices.success) {
+			return controller.sendSuccess(
+				res,
+				resServices.data,
+				200,
+				resServices.message
+			);
+		}
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			300,
+			resServices.message
+		);
+	} catch (error) {
+		// bug
+		console.log(error);
+		return controller.sendError(res);
+	}
+};
+exports.getAllInformationUser = async (req, res, next) => {
+	try {
+		const { decodeToken } = req.value.body;
+		const id = decodeToken.data;
+		const payload ={creatorUser: id}
+		const resServicesUser = await userServices.findUserByCreatorUser(payload);
+		const resServicesIdentityCard = await identityServices.findAllIdentityByCreatorUser(payload);
+		const resServicesFamilyPhone = await familyPhoneServices.findAllFamilyPhoneByCreatorUser(payload);
+		const resServicesAccountBank = await accountBankServices.findAllAccountBankByCreatorUser(payload);
+		let identityCardResult;
+		let userResult = resServicesIdentityCard.data;
+		let familyPhoneResult = resServicesFamilyPhone.data;
+		let accountBankResult = resServicesAccountBank.data;
+		if(resServicesUser.data == null)
+		{
+			console.log("abc")
+			userResult = ""
+		}
+		if(resServicesIdentityCard.data == null)
+			identityCardResult = ""
+		if(resServicesFamilyPhone.data == null)
+			familyPhoneResult = ""
+		if(resServicesAccountBank.data == null)
+			accountBankResult = ""
+		console.log(resServicesUser.data)
+		if(identityCardResult!="")
+		{
+			let arr = [resServicesIdentityCard.data.identityCardFE,resServicesIdentityCard.data.identityCardHold,resServicesIdentityCard.data.identityCardTB];
+			let arrLink = [];
+			for (i of arr) {
+				var upload = await uploadS3Services.getImageS3(i);
+				arrLink.push(upload);
+			}
+			identityCardResult = {
+				arrLink: arrLink,
+				name: resServicesIdentityCard.data.name,
+				gender: resServicesIdentityCard.data.gender,
+				birthDate: resServicesIdentityCard.data.birthDate,
+				_id: resServicesAccountBank.data._id
+			}
+		}
+		else
+		{
+			identityCardResult = "";
+		}
+		let resServices = {
+			user: userResult,
+			identityCard: identityCardResult,
+			familyPhone: familyPhoneResult,
+			resServicesAccountBank: accountBankResult
+		}
+		console.log(resServices)
+			return controller.sendSuccess(
+				res,
+				resServices,
+				200,
+				"Get Infomation User Success"
+			);
+		// return controller.sendSuccess(
+		// 	res,
+		// 	resServices.data,
+		// 	300,
+		// 	resServices.message
+		// );
 	} catch (error) {
 		// bug
 		console.log(error);

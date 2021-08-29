@@ -19,7 +19,7 @@ app.use(cookieParser())
 app.use(cors())
 
 
-app.get('/healCheck', (req, res) => res.status(200).json({hello : 'Welcome to PTSHIP v1'}))
+app.get('/healCheck', (req, res) => res.status(200).json({hello : 'Welcome to IVAY'}))
 app.use(route)
 
 

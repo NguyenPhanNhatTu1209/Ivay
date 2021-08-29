@@ -6,7 +6,7 @@ const Schema = mongoose.Schema
 const ACCOUNT_BANK = new Schema({
   accountNumberBank:defaultModel.string,
   cardBank:defaultModel.string,
-  creatorUser:defaultModel.number,
+  creatorUser:defaultModel.stringRef,
   nameBank:defaultModel.string
     
 },{timestamps:true})

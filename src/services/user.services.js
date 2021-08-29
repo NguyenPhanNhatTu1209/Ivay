@@ -97,6 +97,28 @@ exports.findUserByIdAsync = async body => {
 		};
 	}
 };
+exports.findUserByCreatorUser = async body => {
+	try {
+		const user = await USER.findOne(body);
+		if (!user) {
+			return {
+				message: 'Get User Fail',
+				success: false,
+				data: null
+			};
+		}
+		return {
+			message: 'Successfully Get User',
+			success: true,
+			data: user
+		};
+	} catch (err) {
+		return {
+			message: 'An error occurred',
+			success: false
+		};
+	}
+};
 
 exports.changePasswordAsync = async (id, body) => {
 	try {
@@ -153,6 +175,12 @@ exports.updateUserAsync = async (id, body) => {
 
 exports.createUserAsync = async body => {
 	try {
+		const check = await USER.findOne({ creatorUser: body.creatorUser });
+		if (check != null)
+			return {
+				message: 'User created',
+				success: false
+			};
 		const user = new USER(body);
 		await user.save();
 		return {
