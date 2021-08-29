@@ -414,6 +414,7 @@ exports.getAllInformationUser = async (req, res, next) => {
 		let resServices = {
 			idAccount: account.data._id,
 			phone: account.data.phone,
+			role:account.data.role,
 			user: userResult,
 			identityCard: identityCardResult,
 			familyPhone: familyPhoneResult,
