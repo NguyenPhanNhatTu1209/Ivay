@@ -58,12 +58,13 @@ exports.registerUserAsync = async body => {
 			phone: phone
 		});
 		await newUser.save();
+		const generateToken = jwtServices.createToken(newUser._id);
 
 		//push notification
 		return {
 			message: 'Successfully Register',
 			success: true,
-			data: newUser
+			data: generateToken
 		};
 	} catch (err) {
 		console.log(err);
