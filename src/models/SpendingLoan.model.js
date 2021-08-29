@@ -5,9 +5,9 @@ const {
 const Schema = mongoose.Schema
 
 
-const LOAN = new Schema({
-  endLoan: defaultModel.date,
-  typeLoan:defaultModel.stringRef,
+const SPENDING_LOAN = new Schema({
+  creatorUser:defaultModel.stringRef,
+  typeLoan: defaultModel.stringRef,
 
   startLoan: defaultModel.date,
   statusLoan: defaultModel.number,
@@ -16,4 +16,4 @@ const LOAN = new Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('LOAN', LOAN)
+module.exports = mongoose.model('SPENDING_LOAN', SPENDING_LOAN)

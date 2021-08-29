@@ -2,12 +2,46 @@ const USER = require('../models/User.model');
 const ACCOUNT = require('../models/Account.model');
 const bcrypt = require('bcryptjs');
 const jwtServices = require('./jwt.services');
-const { defaultRoles } = require('../config/defineModel');
-const AccountModel = require('../models/Account.model');
+const {
+	defaultRoles
+} = require('../config/defineModel');
+const {
+	DFRole
+} = require('../config');
+
+
+exports.existPhoneAsync = async query => {
+	try {
+		const emailExist = await ACCOUNT.findOne({
+			phone: query.phone
+		});
+		if (emailExist)
+			return {
+				message: 'Phone already exist !!',
+				success: true,
+				data: false
+			};
+		return {
+			message: 'Phone not exist !!',
+			success: true,
+			data: true
+		};
+	} catch (e) {
+		console.log(e)
+		return {
+			message: 'An error occurred',
+			success: false
+		};
+	}
+
+}
 
 exports.registerUserAsync = async body => {
 	try {
-		const { phone, password } = body;
+		const {
+			phone,
+			password
+		} = body;
 		//check if email is already in the database
 		const emailExist = await ACCOUNT.findOne({
 			phone: phone
@@ -42,7 +76,10 @@ exports.registerUserAsync = async body => {
 
 exports.loginAsync = async body => {
 	try {
-		const { phone, password } = body;
+		const {
+			phone,
+			password
+		} = body;
 		const user = await ACCOUNT.findOne({
 			phone: phone
 		});
@@ -174,7 +211,9 @@ exports.changePasswordAsync = async (id, body) => {
 exports.updateUserAsync = async (id, body) => {
 	try {
 		console.log(id)
-		const userUpdate = await USER.findOneAndUpdate({creatorUser: id}, body, {
+		const userUpdate = await USER.findOneAndUpdate({
+			creatorUser: id
+		}, body, {
 			new: true
 		});
 		if (userUpdate) {
@@ -198,7 +237,9 @@ exports.updateUserAsync = async (id, body) => {
 
 exports.createUserAsync = async body => {
 	try {
-		const check = await USER.findOne({ creatorUser: body.creatorUser });
+		const check = await USER.findOne({
+			creatorUser: body.creatorUser
+		});
 		if (check != null)
 			return {
 				message: 'User created',
@@ -219,3 +260,15 @@ exports.createUserAsync = async body => {
 		};
 	}
 };
+
+exports._findAdminByRoleAsync = async () => {
+	try {
+		const user = await USER.findOne({
+			role: DFRole.admin
+		})
+		return user
+	} catch (err) {
+		console.log(err)
+		return null
+	}
+}

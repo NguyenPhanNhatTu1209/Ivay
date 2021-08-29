@@ -52,7 +52,8 @@ const DFStatusLoanValue = ['InActive', 'Active'];
 
 const DFStatusLoan = {
 	inActive: 0,
-	active: 1
+	active: 1,
+	deleted:2
 };
 
 const DFStatusTypeLoanValue = ['InActive', 'Active', 'Deleted'];
@@ -62,6 +63,13 @@ const DFStatusTypeLoan = {
 	active: 1,
 	deleted: 2
 };
+
+
+const DFRole = {
+	user: 0,
+	admin: 1
+}
+const DFRoleValue = ["User", "Admin"]
 module.exports = {
 	configEnv,
 	DFAcademicLevelValue,
@@ -73,5 +81,7 @@ module.exports = {
 	DFStatusLoanValue,
 	DFGender,
 	DFGenderValue,
-	DFVerify
+	DFVerify,
+	DFRole,
+	DFRoleValue
 };

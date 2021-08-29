@@ -63,7 +63,7 @@ exports.init = async () => {
         {
           const user = await USER.findOne({creatorUser: account._id})
           let deviceId;
-          socket.on("UPDATE_DEVICE_CSS",(data)=>{
+          socket.on("UPDATE_DEVICE_CSS",async (data)=>{
             const device = DEVICE.findOne({deviceUUid: data.deviceUUid, creatorUser: account._id})
             if(device!= null)
             {

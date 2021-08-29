@@ -5,9 +5,9 @@ const Schema = mongoose.Schema
 
 const TYPE_LOAN = new Schema({
   nameLoan:defaultModel.string,
-  interestRate:defaultModel.string,
+  interestRate:defaultModel.number,
   monthLoan:defaultModel.number,
-  statusTypeLoan:defaultModel.string
+  statusTypeLoan:defaultModel.number
     
 },{timestamps:true})
 
