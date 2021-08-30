@@ -16,6 +16,10 @@ app.use(express.urlencoded({
 app.use(express.json())
 app.use(morgan("dev"))
 app.use(cookieParser())
+// app.use(cors( {
+//     origin: 'http://127.0.0.1:5500/index.html',
+//     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+//   }))
 app.use(cors())
 
 

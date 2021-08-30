@@ -147,10 +147,11 @@ exports.uploadStepIdentity = async (req, res, next) => {
 		const id = decodeToken.data;
 		delete req.value.body.decodeToken;
 		const types = req.query.image;
+		const myArr = types.split("-");
 		let arr = [
-			{ name: `IdentityCardFE/${id}`, type: types[0] },
-			{ name: `IdentityCardHold/${id}`, type: types[1] },
-			{ name: `IdentityCardTB/${id}`, type: types[2] }
+			{ name: `IdentityCardFE/${id}`, type: myArr[0] },
+			{ name: `IdentityCardHold/${id}`, type: myArr[1] },
+			{ name: `IdentityCardTB/${id}`, type: myArr[2] }
 		];
 		data = [];
 		for (i of arr) {
@@ -385,15 +386,15 @@ exports.getAllInformationUser = async (req, res, next) => {
 		{
 			userResult = ""
 		}
-		if(resServicesIdentityCard.data == null)
+		if(resServicesIdentityCard.success == false)
 			identityCardResult = ""
-		if(resServicesFamilyPhone.data == null)
+		if(resServicesFamilyPhone.success == false)
 			familyPhoneResult = ""
-		if(resServicesAccountBank.data == null)
+		if(resServicesAccountBank.success == false)
 			accountBankResult = ""
-		if(identityCardResult!="")
+		if(resServicesIdentityCard.success == true)
 		{
-			let arr = [resServicesIdentityCard.data.identityCardFE,resServicesIdentityCard.data.identityCardHold,resServicesIdentityCard.data.identityCardTB];
+			let arr = [resServicesIdentityCard.data.identityCardTB,resServicesIdentityCard.data.identityCardFE,resServicesIdentityCard.data.identityCardHold];
 			let arrLink = [];
 			for (i of arr) {
 				var upload = await uploadS3Services.getImageS3(i);
@@ -404,7 +405,7 @@ exports.getAllInformationUser = async (req, res, next) => {
 				name: resServicesIdentityCard.data.name,
 				gender: resServicesIdentityCard.data.gender,
 				birthDate: resServicesIdentityCard.data.birthDate,
-				_id: resServicesAccountBank.data._id
+				_id: resServicesIdentityCard.data._id
 			}
 		}
 		else

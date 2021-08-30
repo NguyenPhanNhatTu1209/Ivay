@@ -5,6 +5,8 @@ const { ConnectionStates } = require('mongoose');
 
 exports.uploadImageS3 = async (body,expires = 300) => {
 	try {
+		console.log(body.name)
+		console.log(body.type)
 		var s3 = new aws.S3({
 			accessKeyId: configEnv.AWS_ACCESS_KEY,
 			secretAccessKey: configEnv.AWS_SECRET_KEY,
@@ -17,6 +19,7 @@ exports.uploadImageS3 = async (body,expires = 300) => {
 			Expires: expires,
 			ContentType: body.type
 		};
+		console.log(s3Params)
 		const signedUrl = await s3.getSignedUrl('putObject', s3Params);
 		return signedUrl;
 	} catch (e) {
@@ -25,7 +28,7 @@ exports.uploadImageS3 = async (body,expires = 300) => {
 	}
 };
 
-exports.getImageS3 = async (body,expires = 300) => {
+exports.getImageS3 = async (body,expires = 60*60) => {
 	try {
 		var s3 = new aws.S3({
 			accessKeyId: configEnv.AWS_ACCESS_KEY,

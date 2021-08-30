@@ -26,7 +26,7 @@ const schemas = {
 	createStepIdentity: joi.object().keys({
 		name: joi.string().required(),
 		gender: joi.number().required(),
-		birthDate: joi.date().required(),
+		birthDate: joi.string().required(),
 		numberCard: joi.number().required()
 	}),
 	createStepAccountBank: joi.object().keys({
