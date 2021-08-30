@@ -58,7 +58,7 @@ exports.init = async () => {
       } else {
         console.log(decodedFromToken.data)
         console.log(global.listUser);
-        const account=await ACCOUNT.findById(decodedFromToken.data)
+        const account=await ACCOUNT.findById(decodedFromToken.data.id)
         if(account)
         {
           let deviceId;

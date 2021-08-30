@@ -76,7 +76,12 @@ exports.findAllLoanByStatusAsync = async (query) => {
 exports.findAllLoanAsync = async (query) => {
   try {
     const loans = await LOAN.find({
-      creatorUser: query.creatorUser
+      creatorUser: {
+        $regex: query.creatorUser,
+        $options: '$i'
+      }
+    }).sort({
+      createAt: -1
     })
     return {
       message: 'Successfully findAllLoanByStatus',
