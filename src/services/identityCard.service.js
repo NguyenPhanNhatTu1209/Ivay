@@ -2,6 +2,7 @@ const { DFStatusLoan } = require('../config')
 const IDENTITY_CARD = require('../models/IdentityCard')
 exports.createIdentityAsync  = async (body)   =>  {
   try {
+    console.log(body.creatorUser)
     const check = await IDENTITY_CARD.findOne({ creatorUser: body.creatorUser });
 		if (check != null)
 			return {
