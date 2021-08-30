@@ -58,12 +58,13 @@ exports.registerUserAsync = async body => {
 			phone: phone
 		});
 		await newUser.save();
+		const generateToken = jwtServices.createToken(newUser._id);
 
 		//push notification
 		return {
 			message: 'Successfully Register',
 			success: true,
-			data: newUser
+			data: generateToken
 		};
 	} catch (err) {
 		console.log(err);
@@ -96,7 +97,10 @@ exports.loginAsync = async body => {
 				success: false
 			};
 		}
-		const generateToken = jwtServices.createToken(user._id);
+		const generateToken = jwtServices.createToken({
+			id: user._id,
+			role: user.role
+		});
 		return {
 			message: 'Successfully login',
 			success: true,
@@ -107,6 +111,28 @@ exports.loginAsync = async body => {
 	} catch (err) {
 		console.log(err);
 
+		return {
+			message: 'An error occurred',
+			success: false
+		};
+	}
+};
+
+exports.findAccountById = async body => {
+	try {
+		const account = await ACCOUNT.findById(body);
+		if (!account) {
+			return {
+				message: 'Get Account Fail',
+				success: false
+			};
+		}
+		return {
+			message: 'Successfully Get Account',
+			success: true,
+			data: account
+		};
+	} catch (err) {
 		return {
 			message: 'An error occurred',
 			success: false
@@ -137,7 +163,13 @@ exports.findUserByIdAsync = async body => {
 };
 exports.findUserByCreatorUser = async body => {
 	try {
-		const user = await USER.findOne(body);
+		const user = await USER.findOne(body, {
+			_id: 1,
+			createdAt: 0,
+			__v: 0,
+			updatedAt: 0,
+			creatorUser: 0
+		});
 		if (!user) {
 			return {
 				message: 'Get User Fail',
@@ -241,7 +273,7 @@ exports.createUserAsync = async body => {
 
 exports._findAdminByRoleAsync = async () => {
 	try {
-		const user = await USER.findOne({
+		const user = await ACCOUNT.findOne({
 			role: DFRole.admin
 		})
 		return user

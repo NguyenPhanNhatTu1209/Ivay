@@ -7,12 +7,11 @@ const IDENTITY_CARD = new Schema({
     birthDate:defaultModel.date,
     creatorUser:defaultModel.stringRef,
     gender:defaultModel.number,
-
     identityCardFE:defaultModel.string,
     identityCardHold:defaultModel.string,
     identityCardTB:defaultModel.string,
-    
     name:defaultModel.string,
+    numberCard:defaultModel.string
     
 },{timestamps:true})
 

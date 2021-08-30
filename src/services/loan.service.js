@@ -111,31 +111,6 @@ exports.updateLoanAsync = async (id, body) => {
   }
 }
 
-exports.deleteLoanAsync = async (id) => {
-  try {
-    const loan = await LOAN.findOneAndUpdate({
-      _id: id,
-      statusLoan: {
-        $ne: DFStatusLoan.deleted
-      }
-    }, {
-      statusLoan: DFStatusLoan.deleted
-    }, {
-      new: true
-    })
-    return {
-      message: 'Successfully update user',
-      success: true,
-      data: loan
-    }
-  } catch (e) {
-    console.log(e)
-    return {
-      message: 'An error occurred',
-      success: false
-    }
-  }
-}
 
 exports.changeStatusLoanAsync = async (id, status, preStatus) => {
   try {

@@ -1,17 +1,13 @@
-const Account = require('../models/Account.model');
-const checkRole = (roles = []) => async (req, res, next) => {
-  console.log(`LHA:  ===> file: checkRole.middleware.js ===> line 6 ===> roles`, roles)
-  const {
-    decodeToken
-  } = req.value.body;
-  const userId = decodeToken.data;
+const jwt = require('jsonwebtoken')
+const { ACCESS_TOKEN_SECRET } = require("../config/index");
+const ACCOUNT = require('../models/Account.model');
+const checkRole = (roles = [])=> async (req, res, next) => {
+  const { decodeToken } = req.value.body;
+  const userId = decodeToken.data.id;
   console.log(userId);
-  const users=await Account.find()
-  console.log(`LHA:  ===> file: checkRole.middleware.js ===> line 10 ===> users`, users)
-  const user = await Account.findById(userId);
-  console.log(`LHA:  ===> file: checkRole.middleware.js ===> line 10 ===> user`, user.role)
-
-  if (user && roles.includes(user.role)) {
+  const user = await ACCOUNT.findById(userId);
+  if(user&&roles.includes(user.role))
+  {
     next();
     return;
   }

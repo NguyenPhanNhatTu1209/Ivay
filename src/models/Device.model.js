@@ -5,11 +5,10 @@ const {
 const Schema = mongoose.Schema
 
 
-const ACCOUNT = new Schema({
+const DEVICE = new Schema({
   appVersion: defaultModel.string,
-  creatorUser: defaultModel.stringPhone,
+  creatorUser: defaultModel.stringRef,
   deviceModel: defaultModel.string,
-
   deviceUUid: defaultModel.string,
   fcm: defaultModel.string,
   statusDevice: defaultModel.number
@@ -18,4 +17,4 @@ const ACCOUNT = new Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('ACCOUNT', ACCOUNT)
+module.exports = mongoose.model('DEVICE', DEVICE)

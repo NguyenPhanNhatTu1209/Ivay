@@ -85,7 +85,7 @@ exports.findUserByIdAsync = async (req, res, next) => {
 		const {
 			decodeToken
 		} = req.value.body;
-		const _id = decodeToken.data;
+		const _id = decodeToken.data.id;
 		const resServices = await authServices.findUser(_id);
 		return controller.sendSuccess(
 			res,
@@ -123,7 +123,7 @@ exports.changePasswordAsync = async (req, res, next) => {
 			newPassword,
 			decodeToken
 		} = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		const resServices = await authServices.changePasswordAsync(id, req.body);
 		if (!resServices.success) {
 			return controller.sendSuccess(
@@ -149,7 +149,7 @@ exports.updateUserAsync = async (req, res, next) => {
 		const {
 			decodeToken
 		} = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		console.log(`LHA:  ===> file: auth.controller.js ===> line 56 ===> id`, id);
 		let bodyUser = {
 			academicLevel: req.value.body.academicLevel,
@@ -187,7 +187,7 @@ exports.updateImageAsync = async (req, res, next) => {
 		const {
 			decodeToken
 		} = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		const user = await authServices.findUser(id);
 		if (user.success) {
 			if (req.files['Image'] != null) {
@@ -251,7 +251,7 @@ exports.createStepUser = async (req, res, next) => {
 		const {
 			decodeToken
 		} = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken
 		const payload = Object.assign({
 			creatorUser: id
@@ -275,7 +275,7 @@ exports.createStepIdentity = async (req, res, next) => {
 		const {
 			decodeToken
 		} = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken
 		const payload = Object.assign({
 			CreatorUser: id
@@ -299,7 +299,7 @@ exports.createStepAccountBank = async (req, res, next) => {
 		const {
 			decodeToken
 		} = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken
 		const payload = Object.assign({
 			CreatorUser: id
@@ -323,7 +323,7 @@ exports.createStepFamilyPhone = async (req, res, next) => {
 		const {
 			decodeToken
 		} = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken
 		const payload = Object.assign({
 			CreatorUser: id
@@ -347,7 +347,7 @@ exports.updateStepUser = async (req, res, next) => {
 		const {
 			decodeToken
 		} = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken
 		const payload = Object.assign({
 			CreatorUser: id

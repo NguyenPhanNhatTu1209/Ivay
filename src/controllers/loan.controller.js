@@ -2,13 +2,15 @@ const controller = require('./controller');
 const loanServices = require('../services/loan.service');
 const spendingLoanServices = require('../services/spendingLoan.service')
 const typeLoanServices = require('../services/typeLoan.service');
-const { DFStatusLoan } = require('../config');
+const {
+	DFStatusLoan
+} = require('../config');
 exports.createLoanAsync = async (req, res, next) => {
 	try {
 		const {
 			decodeToken
 		} = req.value.body
-		const id = decodeToken.data
+		const id = decodeToken.data.id
 		delete req.value.body.decodeToken
 		const payload = Object.assign(req.value.body, {
 			creatorUser: id
@@ -83,12 +85,12 @@ exports.createTypeLoanAsync = async (req, res, next) => {
 exports.acceptLoanByAdminAsync = async (req, res, next) => {
 	try {
 		const payload = req.query.id
-		const resServices = await loanServices.changeStatusLoanAsync(payload,DFStatusLoan.accept,DFStatusLoan.reject)
+		const resServices = await loanServices.changeStatusLoanAsync(payload, DFStatusLoan.accept, DFStatusLoan.spending)
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
 		return controller.sendSuccess(
-			res, {},
+			res, resServices.data,
 			200,
 			resServices.message
 		);
@@ -101,12 +103,12 @@ exports.acceptLoanByAdminAsync = async (req, res, next) => {
 exports.completeLoanByAdminAsync = async (req, res, next) => {
 	try {
 		const payload = req.query.id
-		const resServices = await loanServices.changeStatusLoanAsync(payload,DFStatusLoan.complete,DFStatusLoan.accept)
+		const resServices = await loanServices.changeStatusLoanAsync(payload, DFStatusLoan.complete, DFStatusLoan.accept)
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
 		return controller.sendSuccess(
-			res, {},
+			res, resServices.data,
 			200,
 			resServices.message
 		);
@@ -119,12 +121,12 @@ exports.completeLoanByAdminAsync = async (req, res, next) => {
 exports.rejectLoanByAdminAsync = async (req, res, next) => {
 	try {
 		const payload = req.query.id
-		const resServices = await loanServices.changeStatusLoanAsync(payload,DFStatusLoan.reject,DFStatusLoan.spending)
+		const resServices = await loanServices.changeStatusLoanAsync(payload, DFStatusLoan.reject, DFStatusLoan.spending)
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
 		return controller.sendSuccess(
-			res, {},
+			res, resServices.data,
 			200,
 			resServices.message
 		);

@@ -3,7 +3,7 @@ const {
 } = require("../config/defineModel");
 const jwt = require('jsonwebtoken')
 const chatSocket = require('./chat.socket');
-const { ACCESS_TOKEN_SECRET } = require("../config");
+const { configEnv } = require("../config");
 const ACCOUNT =require('../models/Account.model');
 const DEVICE = require('../models/Device.model')
 const USER = require('../models/User.model');
@@ -29,12 +29,17 @@ exports.findUserById=(socketId)=>{
     return e.socket===socketId
   });
 }
+exports.findUserBySocket=(socketId)=>{
+  return global.listUser.find((e)=>{
+    return e.socket===socketId
+  });
+}
 
 global.listUser = []
 
 exports.init = async () => {
   global.io.on('connection', async (socket) => {
-
+    console.log("abc");
     const header = socket.handshake.query.token;
     const fcm = socket.handshake.query.fcm; 
     console.log("header: ",header);
@@ -46,7 +51,7 @@ exports.init = async () => {
     }
     else{
       const token = header.split(' ')[1];
-    jwt.verify(token, ACCESS_TOKEN_SECRET, async (err, decodedFromToken) => {
+    jwt.verify(token, configEnv.ACCESS_TOKEN_SECRET, async (err, decodedFromToken) => {
       console.log("err",err)
       if (err) {
               io.sockets.sockets[socket.id].disconnect()
@@ -56,10 +61,9 @@ exports.init = async () => {
         const account=await ACCOUNT.findById(decodedFromToken.data)
         if(account)
         {
-          const user = await USER.findOne({creatorUser: account._id})
           let deviceId;
           socket.on("UPDATE_DEVICE_CSS",async (data)=>{
-            const device = DEVICE.findOne({deviceUUid: data.deviceUUid, creatorUser: account._id})
+            const device = await DEVICE.findOne({deviceUUid: data.deviceUUid, creatorUser: account._id})
             if(device!= null)
             {
               deviceId = device._id;
@@ -80,7 +84,7 @@ exports.init = async () => {
             }
           })
           // await USER.findOneAndUpdate({_id: decodedFromToken.data},{fcm: fcm},{new:true})
-          global.listUser.push({socket: socket.id, fcm, userId:decodedFromToken.data,role:user.role, deviceId: deviceId});
+          global.listUser.push({socket: socket.id, fcm, userId:decodedFromToken.data,deviceId: deviceId});
           console.log(`LHA:  ===> file: index.js ===> line 62 ===> global.listUser`, global.listUser)
         }
       }
@@ -88,17 +92,21 @@ exports.init = async () => {
     }
 
 
-    console.log("connect Socket")
-    socket.on(defaultChatSocket.sendMessageCSS,(data)=> chatSocket.chatMessage(socket,data))
-    socket.on(defaultChatSocket.joinRoomCSS, (data) => chatSocket.joinRoom(socket, data))
-    socket.on(defaultChatSocket.leaveRoomCSS, (data) => chatSocket.leaveRoom(socket, data))
+    console.log("connect Socket",global.listUser.length)
+    // socket.on(defaultChatSocket.sendMessageCSS,(data)=> chatSocket.chatMessage(socket,data))
+    // socket.on(defaultChatSocket.joinRoomCSS, (data) => chatSocket.joinRoom(socket, data))
+    // socket.on(defaultChatSocket.leaveRoomCSS, (data) => chatSocket.leaveRoom(socket, data))
 
-    socket.on('disconnect',async function () {
-      let index = global.listUser.findIndex((e)=>{
-        return e.socket===socket.id
-      });
-      deviceId = global.listUser[index].deviceId;
-      await DEVICE.findOneAndUpdate({_id: deviceId},{status:0},{new:true})
+    socket.on('disconnect', async function () {
+      // let index = global.listUser.findIndex((e)=>{
+      //   return e.socket===socket.id
+      // });
+      // deviceId = global.listUser[index].deviceId;
+      const user = findUserBySocket(socket.id);
+      if(user)
+      {
+        await DEVICE.findOneAndUpdate({_id: user.deviceId},{status:0})
+      }
       global.listUser=global.listUser.filter(e=>e.socket!==socket.id)
       console.log("Disconnect Socket")
     })
