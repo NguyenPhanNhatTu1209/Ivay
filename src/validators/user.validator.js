@@ -35,13 +35,13 @@ const schemas = {
 		nameBank: joi.number().required(),
 	}),
 	createFamilyPhone: joi.object().keys({
-		familyRelationship: joi.string().required(),
+		familyRelationship: joi.number().required(),
 		phoneName: joi.string().required(),
 		phoneNumber: joi.string().required(),
 	}),
 	updateFamilyPhone: joi.object().keys({
 		id: joi.string().required(),
-		familyRelationship: joi.string().required(),
+		familyRelationship: joi.number().required(),
 		phoneName: joi.string().required(),
 		phoneNumber: joi.string().required(),
 	}),

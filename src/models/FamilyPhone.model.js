@@ -6,7 +6,7 @@ const Schema = mongoose.Schema
 const FAMILY_PHONE = new Schema({
     creatorUser:defaultModel.stringRef,
 
-    familyRelationship:defaultModel.string,
+    familyRelationship:defaultModel.number,
     phoneName:defaultModel.string,
     phoneNumber:defaultModel.string,
     
