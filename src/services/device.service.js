@@ -1,6 +1,4 @@
-const {
-  DFStatusLoan
-} = require('../config')
+
 const DEVICE = require('../models/Device.model')
 exports.createDeviceAsync = async (body) => {
   try {

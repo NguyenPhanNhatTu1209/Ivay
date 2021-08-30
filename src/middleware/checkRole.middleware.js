@@ -1,13 +1,17 @@
-const jwt = require('jsonwebtoken')
-const { ACCESS_TOKEN_SECRET } = require("../config/index");
-const User = require('../models/User.model');
-const checkRole = (roles = [])=> async (req, res, next) => {
-  const { decodeToken } = req.value.body;
+const Account = require('../models/Account.model');
+const checkRole = (roles = []) => async (req, res, next) => {
+  console.log(`LHA:  ===> file: checkRole.middleware.js ===> line 6 ===> roles`, roles)
+  const {
+    decodeToken
+  } = req.value.body;
   const userId = decodeToken.data;
   console.log(userId);
-  const user = await User.findById(userId);
-  if(roles.includes(user.role))
-  {
+  const users=await Account.find()
+  console.log(`LHA:  ===> file: checkRole.middleware.js ===> line 10 ===> users`, users)
+  const user = await Account.findById(userId);
+  console.log(`LHA:  ===> file: checkRole.middleware.js ===> line 10 ===> user`, user.role)
+
+  if (user && roles.includes(user.role)) {
     next();
     return;
   }
@@ -16,6 +20,6 @@ const checkRole = (roles = [])=> async (req, res, next) => {
     success: false
   });
 };
-  module.exports = {
-    checkRole,
-  }
+module.exports = {
+  checkRole,
+}

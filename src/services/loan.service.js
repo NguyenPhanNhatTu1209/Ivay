@@ -6,22 +6,17 @@ const TYPE_LOAN = require('../models/TypeLoan.model')
 const SPENDING_LOAN = require('../models/SpendingLoan.model')
 exports.createLoanAsync = async (payload) => {
   try {
-
-    const spendingLoan = await SPENDING_LOAN.findById(payload, {
-      _v: 0
-    })
-    if (spendingLoan) {
-      const typeLoan = await TYPE_LOAN.findById(spendingLoan.typeLoan)
+    const typeLoan = await TYPE_LOAN.findById(payload.typeLoan)
+    if (typeLoan) {
       const endTime = new Date().setMonth(new Date().getMonth() - Number(typeLoan.monthLoan))
       const body = {
-        totalLoanAmount: spendingLoan.totalLoanAmount,
-        typeLoan: spendingLoan.typeLoan,
-        creatorUser: spendingLoan.creatorUser,
+        totalLoanAmount: payload.totalLoanAmount,
+        typeLoan: payload.typeLoan,
+        creatorUser: payload.creatorUser,
         startLoan: new Date(),
         endLoan: new Date(endTime),
-        statusLoan: DFStatusLoan.active
+        statusLoan: payload.spending
       }
-      // JSON.parse(JSON.stringify(spendingLoan))
       const loan = new LOAN(body)
       await loan.save()
       return {
@@ -29,6 +24,10 @@ exports.createLoanAsync = async (payload) => {
         success: true,
         data: loan
       }
+    }
+    return {
+      message: 'Dont find type loan',
+      success: false,
     }
   } catch (e) {
     console.log(e)
@@ -39,11 +38,48 @@ exports.createLoanAsync = async (payload) => {
   }
 }
 
-exports.findAllLoanAsync = async () => {
+// const 
+exports.findAllLoanByStatusAsync = async (query) => {
   try {
-    const loans = await LOAN.find()
+    if ([DFStatusLoan.accept, DFStatusLoan.complete].includes(query.status)) {
+      const loans = await LOAN.find({
+        statusLoan: query.status,
+        creatorUser: query.creatorUser
+      }).skip(Number(query.skip)).limit(Number(query.limit))
+      return {
+        message: 'Successfully findAllLoanByStatus',
+        success: true,
+        data: loans
+      }
+    } else {
+      const loans = await SPENDING_LOAN.find({
+        statusLoan: query.status,
+        creatorUser: query.creatorUser
+      }).skip(Number(query.skip)).limit(Number(query.limit))
+      return {
+        message: 'Successfully findAllLoanByStatus',
+        success: true,
+        data: loans
+      }
+    }
+
+
+  } catch (e) {
+    console.log(e)
     return {
-      message: 'Successfully update user',
+      message: 'An error occurred',
+      success: false
+    }
+  }
+}
+
+exports.findAllLoanAsync = async (query) => {
+  try {
+    const loans = await LOAN.find({
+      creatorUser: query.creatorUser
+    })
+    return {
+      message: 'Successfully findAllLoanByStatus',
       success: true,
       data: loans
     }
@@ -77,7 +113,12 @@ exports.updateLoanAsync = async (id, body) => {
 
 exports.deleteLoanAsync = async (id) => {
   try {
-    const loan = await LOAN.findOneAndUpdate({_id:id,statusLoan:{$ne:DFStatusLoan.deleted}}, {
+    const loan = await LOAN.findOneAndUpdate({
+      _id: id,
+      statusLoan: {
+        $ne: DFStatusLoan.deleted
+      }
+    }, {
       statusLoan: DFStatusLoan.deleted
     }, {
       new: true
@@ -96,17 +137,25 @@ exports.deleteLoanAsync = async (id) => {
   }
 }
 
-exports.changeStatusLoanAsync = async (id, status) => {
+exports.changeStatusLoanAsync = async (id, status, preStatus) => {
   try {
-    const loan = await LOAN.findByIdAndUpdate(id, {
+    const loan = await LOAN.findOneAndUpdate({
+      _id: id,
+      statusLoan: preStatus
+    }, {
       statusLoan: status
     }, {
       new: true
     })
+    if (loan)
+      return {
+        message: 'Successfully update changeStatus',
+        success: true,
+        data: loan
+      }
     return {
-      message: 'Successfully update user',
-      success: true,
-      data: loan
+      message: 'Dont find change status',
+      success: false,
     }
   } catch (e) {
     console.log(e)

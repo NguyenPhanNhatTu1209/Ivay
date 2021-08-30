@@ -1,8 +1,9 @@
 const controller = require('./controller');
 const loanServices = require('../services/loan.service');
 const spendingLoanServices = require('../services/spendingLoan.service')
-const typeLoanServices = require('../services/typeLoan.service')
-exports.createSpendingLoanAsync = async (req, res, next) => {
+const typeLoanServices = require('../services/typeLoan.service');
+const { DFStatusLoan } = require('../config');
+exports.createLoanAsync = async (req, res, next) => {
 	try {
 		const {
 			decodeToken
@@ -13,25 +14,19 @@ exports.createSpendingLoanAsync = async (req, res, next) => {
 			creatorUser: id
 		})
 
-		const resServices = await spendingLoanServices.createSpendingLoanAsync(payload);
+		const resServices = await loanServices.createLoanAsync(payload);
 		if (!resServices.success)
 			return controller.sendSuccess(
 				res,
 				resServices.data,
 				300,
 				resServices.message
-			); 
+			);
 
 		// const dataPush=Object.assign({},{action:"NEW_USER"},JSON.parse(JSON.stringify(resServices.data.user)))
 		// console.log(dataPush);
 		// pushNotification(`PT-Ship có khách hàng mới`,`Hãy đặt giá ship cho khách ngay nào`,"",converObjectFieldString(dataPush),admin.fcm)
 		// Push notification cho admin
-		return controller.sendSuccess(
-			res,
-			resServices.data,
-			200,
-			resServices.message
-		);
 		return controller.sendSuccess(
 			res,
 			resServices.data,
@@ -50,7 +45,7 @@ exports.findTypeLoanAsync = async (req, res, next) => {
 			limit: req.query.limit || 15
 		}
 		const resServices = await typeLoanServices.findTypeLoanAsync(query);
-    console.log(`LHA:  ===> file: loan.controller.js ===> line 53 ===> resServices`, resServices)
+		console.log(`LHA:  ===> file: loan.controller.js ===> line 53 ===> resServices`, resServices)
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
@@ -87,8 +82,8 @@ exports.createTypeLoanAsync = async (req, res, next) => {
 
 exports.acceptLoanByAdminAsync = async (req, res, next) => {
 	try {
-		const payload = req.query.idSpendingLoan
-		const resServices = await loanServices.createLoanAsync(payload)
+		const payload = req.query.id
+		const resServices = await loanServices.changeStatusLoanAsync(payload,DFStatusLoan.accept,DFStatusLoan.reject)
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
@@ -103,10 +98,10 @@ exports.acceptLoanByAdminAsync = async (req, res, next) => {
 	}
 }
 
-exports.deletedLoanByAdminAsync=async (req,res,next)=>{
+exports.completeLoanByAdminAsync = async (req, res, next) => {
 	try {
-		const payload = req.query.idLoan
-		const resServices = await loanServices.deleteLoanAsync(payload)
+		const payload = req.query.id
+		const resServices = await loanServices.changeStatusLoanAsync(payload,DFStatusLoan.complete,DFStatusLoan.accept)
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
@@ -120,6 +115,43 @@ exports.deletedLoanByAdminAsync=async (req,res,next)=>{
 		return controller.sendError(res)
 	}
 }
+
+exports.rejectLoanByAdminAsync = async (req, res, next) => {
+	try {
+		const payload = req.query.id
+		const resServices = await loanServices.changeStatusLoanAsync(payload,DFStatusLoan.reject,DFStatusLoan.spending)
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
+		return controller.sendSuccess(
+			res, {},
+			200,
+			resServices.message
+		);
+	} catch (e) {
+		console.log(e)
+		return controller.sendError(res)
+	}
+}
+
+
+// exports.deletedLoanByAdminAsync=async (req,res,next)=>{
+// 	try {
+// 		const payload = req.query.idLoan
+// 		const resServices = await loanServices.deleteLoanAsync(payload)
+// 		if (!resServices.success) {
+// 			return controller.sendSuccess(res, {}, 300, resServices.message);
+// 		}
+// 		return controller.sendSuccess(
+// 			res, {},
+// 			200,
+// 			resServices.message
+// 		);
+// 	} catch (e) {
+// 		console.log(e)
+// 		return controller.sendError(res)
+// 	}
+// }
 // exports.createTypeLoanAsync=(req,res,next)=>{
 // 	try {
 // 		const resServices = await loanServices.findAllLoanAsync();
