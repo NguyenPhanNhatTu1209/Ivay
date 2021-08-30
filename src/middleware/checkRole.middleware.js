@@ -3,10 +3,10 @@ const { ACCESS_TOKEN_SECRET } = require("../config/index");
 const ACCOUNT = require('../models/Account.model');
 const checkRole = (roles = [])=> async (req, res, next) => {
   const { decodeToken } = req.value.body;
-  const userId = decodeToken.data;
+  const userId = decodeToken.data.id;
   console.log(userId);
   const user = await ACCOUNT.findById(userId);
-  if(roles.includes(user.role))
+  if(user&&roles.includes(user.role))
   {
     next();
     return;
@@ -16,6 +16,6 @@ const checkRole = (roles = [])=> async (req, res, next) => {
     success: false
   });
 };
-  module.exports = {
-    checkRole,
-  }
+module.exports = {
+  checkRole,
+}

@@ -97,7 +97,10 @@ exports.loginAsync = async body => {
 				success: false
 			};
 		}
-		const generateToken = jwtServices.createToken(user._id);
+		const generateToken = jwtServices.createToken({
+			id: user._id,
+			role: user.role
+		});
 		return {
 			message: 'Successfully login',
 			success: true,
@@ -160,7 +163,13 @@ exports.findUserByIdAsync = async body => {
 };
 exports.findUserByCreatorUser = async body => {
 	try {
-		const user = await USER.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0,creatorUser:0});
+		const user = await USER.findOne(body, {
+			_id: 1,
+			createdAt: 0,
+			__v: 0,
+			updatedAt: 0,
+			creatorUser: 0
+		});
 		if (!user) {
 			return {
 				message: 'Get User Fail',

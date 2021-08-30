@@ -48,12 +48,13 @@ const DFGender = {
 	other: 2
 };
 
-const DFStatusLoanValue = ['InActive', 'Active'];
+const DFStatusLoanValue = ['Spending', 'Accept', 'Complete', 'Reject'];
 
 const DFStatusLoan = {
-	inActive: 0,
-	active: 1,
-	deleted:2
+	spending: 0,
+	reject: 3,
+	accept: 1,
+	complete: 2
 };
 
 const DFStatusTypeLoanValue = ['InActive', 'Active', 'Deleted'];
