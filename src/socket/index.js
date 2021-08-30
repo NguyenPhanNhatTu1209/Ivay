@@ -102,7 +102,9 @@ exports.init = async () => {
       //   return e.socket===socket.id
       // });
       // deviceId = global.listUser[index].deviceId;
-      const user = findUserBySocket(socket.id);
+      const user = global.listUser.find((e)=>{
+    return e.socket===socketId
+      } )	
       if(user)
       {
         await DEVICE.findOneAndUpdate({_id: user.deviceId},{status:0})
