@@ -109,6 +109,7 @@ exports.createStepIdentity = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
 		const id = decodeToken.data.id;
+		console.log(id);
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
@@ -162,14 +163,35 @@ exports.uploadStepIdentity = async (req, res, next) => {
 		const types = req.body.types;
 		const images = req.body.images;
 		data = [];
-		// for (let i=0;i<images.length;i++) {
-		// 	if(images[i] == 1)
-		// 	{
-		// 		`IdentityCardFE/${id}`
-		// 	}
-		// 	var upload = await uploadS3Services.uploadImageS3(types[i]);
-		// 	data.push(upload);
-		// }
+		for (let i=0;i<images.length;i++) {
+			if(images[i] == 0)
+			{
+				var body = {
+					name: `IdentityCardFE/${id}`,
+					type: types[i]
+				}
+				var upload = await uploadS3Services.uploadImageS3(body);
+				data.push(upload);
+			}
+			else if(images[i] == 1)
+			{
+				var body = {
+					name: `IdentityCardTB/${id}`,
+					type: types[i]
+				}
+				var upload = await uploadS3Services.uploadImageS3(body);
+				data.push(upload);
+			}
+			else if(images[i] == 2)
+			{
+				var body = {
+					name: `IdentityCardHold/${id}`,
+					type: types[i]
+				}
+				var upload = await uploadS3Services.uploadImageS3(body);
+				data.push(upload);
+			}
+		}
 		return controller.sendSuccess(res, data, 200, 'Get link Success');
 	} catch (error) {
 		// bug
@@ -287,18 +309,35 @@ exports.updateStepIdentity = async (req, res, next) => {
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
-				creatorUser: id
+				creatorUser: id,
+				identityCardTB: `IdentityCardTB/${id}`,
+				identityCardHold: `IdentityCardHold/${id}`,
+				identityCardFE: `IdentityCardFE/${id}`
 			},
 			req.value.body
 		);
 		const resServices = await identityServices.updateIdentityAsync(id, payload);
 		if (resServices.success) {
-			return controller.sendSuccess(
-				res,
-				resServices.data,
-				200,
-				resServices.message
-			);
+			let arr = [
+				resServices.data.identityCardFE,
+				resServices.data.identityCardTB,
+				resServices.data.identityCardHold
+			];
+			let arrLink = [];
+			for (i of arr) {
+				var upload = await uploadS3Services.getImageS3(i);
+				arrLink.push(upload);
+			}
+			var result = {
+				gender: resServices.data.gender,
+				name: resServices.data.name,
+				numberCard: resServices.data.numberCard,
+				_id: resServices.data._id,
+				creatorUser: resServices.data.creatorUser,
+				birthDate: resServices.data.birthDate,
+				arrLink: arrLink
+			};
+			return controller.sendSuccess(res, result, 200, resServices.message);
 		}
 		return controller.sendSuccess(
 			res,
