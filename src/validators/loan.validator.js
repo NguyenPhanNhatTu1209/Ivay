@@ -9,8 +9,8 @@ const schemas = {
 		nameLoan:joi.string(),
 		interestRate:joi.number(),
 	}),
-	acceptLoan:joi.object().keys({
-		idSpendingLoan:joi.string().regex(/^[a-fA-F0-9]{24}$/)
+	changeStatus:joi.object().keys({
+		id:joi.string().regex(/^[a-fA-F0-9]{24}$/)
 	}),
 	deletedLoan:joi.object().keys({
 		idLoan:joi.string().regex(/^[a-fA-F0-9]{24}$/)

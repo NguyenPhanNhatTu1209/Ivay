@@ -11,7 +11,7 @@ const { defaultRoles } = require('../config/defineModel');
 exports.findUserByIdAsync = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const _id = decodeToken.data;
+		const _id = decodeToken.data.id;
 		const resServices = await authServices.findUser(_id);
 		return controller.sendSuccess(
 			res,
@@ -75,7 +75,7 @@ exports.findAllUserAsync = async (req, res, next) => {
 exports.createStepUser = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
@@ -108,7 +108,7 @@ exports.createStepUser = async (req, res, next) => {
 exports.createStepIdentity = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
@@ -157,7 +157,7 @@ exports.createStepIdentity = async (req, res, next) => {
 exports.uploadStepIdentity = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const types = req.body.types;
 		const images = req.body.images;
@@ -181,7 +181,7 @@ exports.uploadStepIdentity = async (req, res, next) => {
 exports.createStepAccountBank = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
@@ -216,7 +216,7 @@ exports.createStepAccountBank = async (req, res, next) => {
 exports.createStepFamilyPhone = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
@@ -251,7 +251,7 @@ exports.createStepFamilyPhone = async (req, res, next) => {
 exports.updateStepUser = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
@@ -283,7 +283,7 @@ exports.updateStepUser = async (req, res, next) => {
 exports.updateStepIdentity = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
@@ -315,7 +315,7 @@ exports.updateStepIdentity = async (req, res, next) => {
 exports.updateStepAccountBank = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
@@ -351,7 +351,7 @@ exports.updateStepAccountBank = async (req, res, next) => {
 exports.updateStepFamilyPhone = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const payload = Object.assign(
 			{
@@ -387,7 +387,7 @@ exports.updateStepFamilyPhone = async (req, res, next) => {
 exports.getAllInformationUser = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
-		const id = decodeToken.data;
+		const id = decodeToken.data.id;
 		console.log(id);
 		const payload = { creatorUser: id };
 		const account = await userServices.findAccountById(id);
