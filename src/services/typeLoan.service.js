@@ -60,11 +60,11 @@ exports.findTypeLoanClientAsync = async (query) => {
     for (loan of typeLoans) {
       const obj = JSON.parse(JSON.stringify(loan))
 
+      const inter = loan.interestRate / 12 * loan.monthLoan
       obj.startTime = new Date()
       obj.endTime = new Date().setMonth(new Date().getMonth() + Number(loan.monthLoan))
 
-      obj.totalDebit = Number((Number(query.money) * (100 + loan.interestRate) / 100).toFixed(0))
-
+      obj.totalDebit = Number((Number(query.money) * (100 + inter) / 100).toFixed(0))
       obj.monthlyPaymentAmount = Number((obj.totalDebit / loan.monthLoan).toFixed(0));
 
       result.push(obj)
