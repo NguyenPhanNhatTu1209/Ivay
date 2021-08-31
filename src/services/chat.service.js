@@ -89,13 +89,13 @@ exports.updateSendByUser = async idUser => {
 exports.getMessages = async body => {
 	try {
 		const { idRoom, skip, limit } = body;
-		let resSkip = 0;
+		// let resSkip = 0;
 		console.log(body);
-		const chatAllGetByRoom = await CHAT.find({
-			idRoom
-		}).sort({
-			createdAt: -1
-		});
+		// const chatAllGetByRoom = await CHAT.find({
+		// 	idRoom
+		// }).sort({
+		// 	createdAt: -1
+		// });
 		const chatGetByRoom = await CHAT.find({
 			idRoom
 		})
@@ -104,17 +104,14 @@ exports.getMessages = async body => {
 			})
 			.skip(Number(skip))
 			.limit(Number(limit));
-		if (chatAllGetByRoom.length < limit + skip) resSkip = -1;
-		else {
-			resSkip = skip + limit;
-		}
+		// if (chatAllGetByRoom.length < limit + skip) resSkip = -1;
+		// else {
+		// 	resSkip = skip + limit;
+		// }
 		return {
 			message: 'Successfully get chat',
 			success: true,
-			data: {
-				messages: chatGetByRoom,
-				skip: resSkip
-			}
+			data: chatGetByRoom
 		};
 	} catch (err) {
 		console.log(err);
@@ -127,22 +124,22 @@ exports.getMessages = async body => {
 exports.getRoomAdmin = async body => {
 	try {
 		const { skip, limit } = body;
-		let resSkip = 0;
-		const getAllRoomByAdmin = await ROOM.find({}).sort({
-			updatedAt: -1
-		});
+		// let resSkip = 0;
+		// const getAllRoomByAdmin = await ROOM.find({}).sort({
+		// 	updatedAt: -1
+		// });
 		const getRoomByAdmin = await ROOM.find({},{_id:1,createdAt:0,__v:0,updatedAt:0})
 			.sort({
 				updatedAt: -1
 			})
 			.skip(Number(skip))
 			.limit(Number(limit));
-		if (getAllRoomByAdmin.length < limit + skip)
-             resSkip = -1;
-        else
-        {
-            resSkip = skip+limit;
-        }
+		// if (getAllRoomByAdmin.length < limit + skip)
+        //      resSkip = -1;
+        // else
+        // {
+        //     resSkip = skip+limit;
+        // }
         let arrResult = [];
         for(let i=0;i<getRoomByAdmin.length;i++)
         {
@@ -157,12 +154,9 @@ exports.getRoomAdmin = async body => {
             arrResult.push(roomNew);
         }
 		return {
-			message: 'Successfully get chat',
+			message: 'Successfully get room',
 			success: true,
-			data: {
-				messages: arrResult,
-				skip: resSkip
-			}
+			data: arrResult
 		};
 	} catch (err) {
 		console.log(err);
