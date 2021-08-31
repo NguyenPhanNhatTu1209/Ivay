@@ -4,7 +4,9 @@ const typeLoanServices = require('../services/typeLoan.service');
 const {
 	DFStatusLoan
 } = require('../config');
-const { cloneData } = require('../services/statementInfo.service');
+const {
+	cloneData
+} = require('../services/statementInfo.service');
 exports.createLoanAsync = async (req, res, next) => {
 	try {
 		const {
@@ -189,20 +191,20 @@ exports.findLoanByStatusAdminAsync = async (req, res, next) => {
 		);
 
 	} catch (err) {
-		
+
 		return controller.sendError(res);
 	}
 }
 
-exports.findTypeLoanClient = async (req,res,next) => {
+exports.findTypeLoanClient = async (req, res, next) => {
 	try {
 		const query = {
 			skip: req.value.query.skip || 0,
 			limit: req.value.query.limit || 15,
-			money:req.value.query.money
+			money: req.value.query.money
 
 		}
-		const resServices = await typeLoanServices.findTypeLoanClientAsync( query);
+		const resServices = await typeLoanServices.findTypeLoanClientAsync(query);
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
@@ -219,13 +221,15 @@ exports.findTypeLoanClient = async (req,res,next) => {
 	}
 }
 
-exports.abc = async (req, res, next) => {
+exports.findTypeLoanById = async (req, res, next) => {
 	try {
-		const {
-			decodeToken
-		} = req.value.body;
-		const _id = decodeToken.data.id;
-		const resServices = await cloneData(_id)		
+
+		console.log(req.query.id)
+		const resServices = await typeLoanServices.findTypeLoanByIdAsync(req.query.id)
+
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
 		return controller.sendSuccess(
 			res,
 			resServices.data,

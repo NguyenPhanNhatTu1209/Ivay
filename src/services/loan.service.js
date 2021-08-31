@@ -18,48 +18,55 @@ exports.createLoanAsync = async (payload) => {
     if (!exitsLoan) {
 
       const user = await userService.findUserByCreatorUser({
-        creatorUser: id
+        creatorUser: payload.creatorUser
       })
       //family
       const family = await familyService.findAllFamilyPhoneByCreatorUser({
-        creatorUser: id
+        creatorUser: payload.creatorUser
       })
       //accountBank
       const accountBank = await accountBankService.findAllAccountBankByCreatorUser({
-        creatorUser: id
+        creatorUser: payload.creatorUser
       })
       //identity
     
       const identity = await identityService.findAllIdentityByCreatorUser({
-        creatorUser: id
+        creatorUser: payload.creatorUser
       })
 
-
-
-      const typeLoan = await TYPE_LOAN.findById(payload.typeLoan)
-      if (typeLoan) {
-        const endTime = new Date().setMonth(new Date().getMonth() - Number(typeLoan.monthLoan))
-        const body = {
-          totalLoanAmount: payload.totalLoanAmount,
-          typeLoan: payload.typeLoan,
-          creatorUser: payload.creatorUser,
-          startLoan: new Date(),
-          endLoan: new Date(endTime),
-          statusLoan: payload.spending
+      if(user.success&&family.success&&accountBank.success&&identity.success)
+      {
+        const typeLoan = await TYPE_LOAN.findById(payload.typeLoan)
+        if (typeLoan) {
+          const endTime = new Date().setMonth(new Date().getMonth() - Number(typeLoan.monthLoan))
+          const body = {
+            totalLoanAmount: payload.totalLoanAmount,
+            typeLoan: payload.typeLoan,
+            creatorUser: payload.creatorUser,
+            startLoan: new Date(),
+            endLoan: new Date(endTime),
+            statusLoan: payload.spending
+          }
+          const loan = new LOAN(body)
+          await loan.save()
+          await cloneData(payload.creatorUser)
+          return {
+            message: 'Successfully accept loan',
+            success: true,
+            data: loan
+          }
         }
-        const loan = new LOAN(body)
-        await loan.save()
-        await cloneData(payload.creatorUser)
         return {
-          message: 'Successfully accept loan',
-          success: true,
-          data: loan
+          message: 'Dont find type loan',
+          success: false,
         }
       }
+
       return {
-        message: 'Dont find type loan',
+        message: 'Please enter more info',
         success: false,
       }
+      
     }
     return {
       message: 'Pay off your debt and then borrow it',

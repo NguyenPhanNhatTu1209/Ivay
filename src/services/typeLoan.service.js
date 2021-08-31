@@ -42,24 +42,40 @@ exports.findTypeLoanAsync = async (query) => {
   }
 }
 
-function roundPrice(rnum, rlength) {
-  var newnumber = Math.ceil(rnum * Math.pow(10, rlength - 1)) / Math.pow(10, rlength - 1);
-  var toTenths = newnumber.toFixed(rlength);
-  return toTenths;
-}
 
-function roundIt(num, precision) {
-  var rounder = Math.pow(10, precision);
-  return (Math.round(num * rounder) / rounder).toFixed(precision)
-};
+exports.findTypeLoanByIdAsync = async (query) => {
+  try {
+    const typeLoans = await TYPE_LOAN.findOne({
+      statusTypeLoan: DFStatusTypeLoan.active,
+      _id: query
+    })
+    if (typeLoans)
+      return {
+        message: 'Successfully get Type Loan',
+        success: true,
+        data: typeLoans
+      }
+    return {
+      message: 'fail get Type Loan',
+      success: false,
+      data: null
+    }
+  } catch (e) {
+    console.log(e)
+    return {
+      message: 'An error occurred',
+      success: false
+    }
+  }
+}
 exports.findTypeLoanClientAsync = async (query) => {
   try {
     let month = {
       $gte: 7
     }
-    if (query.money >= 5000000&&query.money<10000000) {
+    if (query.money >= 5000000 && query.money < 10000000) {
       console.log(query.money)
-      month={
+      month = {
         $lte: 30
       }
     }
@@ -76,9 +92,9 @@ exports.findTypeLoanClientAsync = async (query) => {
 
       const inter = loan.interestRate / 12
       const PV = query.money
-      const tienLai=PV*inter
+      const tienLai = PV * inter
 
-      const a=query.money/loan.monthLoan
+      const a = query.money / loan.monthLoan
       // const IRR = inter / 100
 
       obj.startTime = new Date()
@@ -86,7 +102,7 @@ exports.findTypeLoanClientAsync = async (query) => {
 
       // const PMT = (PV * IRR) / (1 - ((1 + IRR) ** (-loan.monthLoan)))
       // const INTERATE = (100 + inter) / 100
-      obj.monthlyPaymentAmount = Math.ceil((a+tienLai) / 1000) * 1000
+      obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000
       obj.totalDebit = obj.monthlyPaymentAmount * loan.monthLoan
 
       result.push(obj)
