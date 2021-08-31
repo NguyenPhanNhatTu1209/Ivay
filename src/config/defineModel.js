@@ -15,7 +15,14 @@ const defaultRoles = {
   Admin: 1,
   User:0
 }
+const defaultChatSocket={
+  sendMessageSSC:"SEND_MESSAGE_SSC",
+  sendMessageCSS:"SEND_MESSAGE_CSS", 
+  joinRoomCSS:"JOIN_ROOM_CSS",
+  leaveRoomCSS:"LEAVE_ROOM_CSS"
+}
 module.exports ={
   defaultModel,
-  defaultRoles
+  defaultRoles,
+  defaultChatSocket
 }
