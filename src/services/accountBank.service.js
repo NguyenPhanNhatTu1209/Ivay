@@ -1,4 +1,6 @@
 const ACCOUNT_BANK = require('../models/AccountBank.model');
+const ACCOUNT_BANKSK = require('../models/SKAccountBank.model');
+
 exports.createAccountBankAsync = async body => {
 	try {
 		const check = await ACCOUNT_BANK.findOne({ creatorUser: body.creatorUser });
@@ -42,6 +44,29 @@ exports.findAllAccountBankAsync = async () => {
 exports.findAllAccountBankByCreatorUser = async (body) => {
 	try {
 		const identities = await ACCOUNT_BANK.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0,creatorUser:0});
+		if (!identities) {
+			return {
+				message: 'Get identities Fail',
+				success: false,
+				data: null
+			};
+		}
+		return {
+			message: 'Successfully find all account Bank',
+			success: true,
+			data: identities
+		};
+	} catch (e) {
+		console.log(e);
+		return {
+			message: 'An error occurred',
+			success: false
+		};
+	}
+};
+exports.findAllAccountBankByCreatorUserSK = async (body) => {
+	try {
+		const identities = await ACCOUNT_BANKSK.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0,creatorUser:0});
 		if (!identities) {
 			return {
 				message: 'Get identities Fail',

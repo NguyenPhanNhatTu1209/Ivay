@@ -498,3 +498,77 @@ exports.getAllInformationUser = async (req, res, next) => {
 		return controller.sendError(res);
 	}
 };
+exports.getAllInFormationSK = async (req, res, next) => {
+	try {
+		const id = req.query.id;
+		console.log(id);
+		const payload = { creatorUser: id };
+		const account = await userServices.findAccountById(id);
+		console.log(account);
+		const resServicesUser = await userServices.findUserByCreatorUserSK(payload);
+		const resServicesIdentityCard =
+			await identityServices.findAllIdentityByCreatorUser(payload);
+		const resServicesFamilyPhone =
+			await familyPhoneServices.findAllFamilyPhoneByCreatorUserSK(payload);
+		const resServicesAccountBank =
+			await accountBankServices.findAllAccountBankByCreatorUser(payload);
+		let identityCardResult;
+		let userResult = resServicesUser.data;
+		let familyPhoneResult = resServicesFamilyPhone.data;
+		let accountBankResult = resServicesAccountBank.data;
+		if (resServicesUser.data == null) {
+			userResult = '';
+		}
+		if (resServicesIdentityCard.data == null) identityCardResult = '';
+		if (resServicesFamilyPhone.data == null) familyPhoneResult = '';
+		if (resServicesAccountBank.data == null) accountBankResult = '';
+		if (resServicesIdentityCard.data != null) {
+			console.log(resServicesIdentityCard.data);
+			let arr = [
+				resServicesIdentityCard.data.identityCardFE,
+				resServicesIdentityCard.data.identityCardTB,
+				resServicesIdentityCard.data.identityCardHold
+			];
+			let arrLink = [];
+			for (let i= 0;i<arr.length;i++) {
+				var upload = await uploadS3Services.getImageS3(arr[i]);
+				arrLink.push(upload);
+			}
+			identityCardResult = {
+				arrLink: arrLink,
+				name: resServicesIdentityCard.data.name,
+				gender: resServicesIdentityCard.data.gender,
+				birthDate: resServicesIdentityCard.data.birthDate,
+				_id: resServicesIdentityCard.data._id,
+				numberCard: resServicesIdentityCard.data.numberCard
+			};
+		} else {
+			identityCardResult = '';
+		}
+		let resServices = {
+			idAccount: account.data._id,
+			phone: account.data.phone,
+			role: account.data.role,
+			user: userResult,
+			identityCard: identityCardResult,
+			familyPhone: familyPhoneResult,
+			resServicesAccountBank: accountBankResult
+		};
+		return controller.sendSuccess(
+			res,
+			resServices,
+			200,
+			'Get Infomation User Success'
+		);
+		// return controller.sendSuccess(
+		// 	res,
+		// 	resServices.data,
+		// 	300,
+		// 	resServices.message
+		// );
+	} catch (error) {
+		// bug
+		console.log(error);
+		return controller.sendError(res);
+	}
+};

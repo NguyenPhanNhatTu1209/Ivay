@@ -1,4 +1,5 @@
 const USER = require('../models/User.model');
+const SKUSER = require('../models/SKUser.model');
 const ACCOUNT = require('../models/Account.model');
 const bcrypt = require('bcryptjs');
 const jwtServices = require('./jwt.services');
@@ -161,9 +162,38 @@ exports.findUserByIdAsync = async body => {
 		};
 	}
 };
+
 exports.findUserByCreatorUser = async body => {
 	try {
 		const user = await USER.findOne(body, {
+			_id: 1,
+			createdAt: 0,
+			__v: 0,
+			updatedAt: 0,
+			creatorUser: 0
+		});
+		if (!user) {
+			return {
+				message: 'Get User Fail',
+				success: false,
+				data: null
+			};
+		}
+		return {
+			message: 'Successfully Get User',
+			success: true,
+			data: user
+		};
+	} catch (err) {
+		return {
+			message: 'An error occurred',
+			success: false
+		};
+	}
+};
+exports.findUserByCreatorUserSK = async body => {
+	try {
+		const user = await SKUSER.findOne(body, {
 			_id: 1,
 			createdAt: 0,
 			__v: 0,
