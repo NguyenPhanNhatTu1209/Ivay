@@ -47,7 +47,6 @@ exports.findTypeLoanAsync = async (req, res, next) => {
 			limit: req.query.limit || 15
 		}
 		const resServices = await typeLoanServices.findTypeLoanAsync(query);
-		console.log(`LHA:  ===> file: loan.controller.js ===> line 53 ===> resServices`, resServices)
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
@@ -171,14 +170,14 @@ exports.findLoanAsync = async (req, res, next) => {
 		return controller.sendError(res);
 	}
 };
-exports.findLoanByStatusAdminAsync =async (req, res, next) => {
+exports.findLoanByStatusAdminAsync = async (req, res, next) => {
 	try {
-		const query={
-			skip:req.value.query.skip||0,
-			limit:req.value.query.limit||15
+		const query = {
+			skip: req.value.query.skip || 0,
+			limit: req.value.query.limit || 15
 
 		}
-		const resServices = await loanServices.findAllLoanByStatusAsync(Number(req.value.query.status),query);
+		const resServices = await loanServices.findAllLoanByStatusAsync(Number(req.value.query.status), query);
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
@@ -190,10 +189,35 @@ exports.findLoanByStatusAdminAsync =async (req, res, next) => {
 		);
 
 	} catch (err) {
+		
 		return controller.sendError(res);
 	}
 }
 
+exports.findTypeLoanClient = async (req,res,next) => {
+	try {
+		const query = {
+			skip: req.value.query.skip || 0,
+			limit: req.value.query.limit || 15,
+			money:req.value.query.money
+
+		}
+		const resServices = await typeLoanServices.findTypeLoanClientAsync( query);
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			200,
+			resServices.message
+		);
+
+	} catch (err) {
+		console.log(err)
+		return controller.sendError(res);
+	}
+}
 
 // exports.updateLoanAsync = async (req, res, next) => {
 // 	try {
