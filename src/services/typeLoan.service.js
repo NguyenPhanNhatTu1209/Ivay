@@ -41,6 +41,17 @@ exports.findTypeLoanAsync = async (query) => {
     }
   }
 }
+
+function roundPrice(rnum, rlength) {
+  var newnumber = Math.ceil(rnum * Math.pow(10, rlength - 1)) / Math.pow(10, rlength - 1);
+  var toTenths = newnumber.toFixed(rlength);
+  return toTenths;
+}
+
+function roundIt(num, precision) {
+  var rounder = Math.pow(10, precision);
+  return (Math.round(num * rounder) / rounder).toFixed(precision)
+};
 exports.findTypeLoanClientAsync = async (query) => {
   try {
     let month = 0
@@ -60,12 +71,19 @@ exports.findTypeLoanClientAsync = async (query) => {
     for (loan of typeLoans) {
       const obj = JSON.parse(JSON.stringify(loan))
 
-      const inter = loan.interestRate / 12 * loan.monthLoan
-      obj.startTime = new Date()
-      obj.endTime = new Date().setMonth(new Date().getMonth() + Number(loan.monthLoan))
+      const inter = loan.interestRate / 12
+      const PV = query.money
+      const IRR = inter / 100
 
-      obj.totalDebit = Number((Number(query.money) * (100 + inter) / 100).toFixed(0))
-      obj.monthlyPaymentAmount = Number((obj.totalDebit / loan.monthLoan).toFixed(0));
+      console.log(loan.monthLoan)
+
+      obj.startTime = new Date()
+      obj.endTime = new Date(new Date().setMonth(new Date().getMonth() + Number(loan.monthLoan)))
+
+      const PMT = (PV * IRR) / (1 - ((1 + IRR) ** (-loan.monthLoan)))
+      // const INTERATE = (100 + inter) / 100
+      obj.monthlyPaymentAmount = Math.ceil(PMT / 1000) * 1000
+      obj.totalDebit = obj.monthlyPaymentAmount * loan.monthLoan
 
       result.push(obj)
     }
