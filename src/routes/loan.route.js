@@ -18,7 +18,8 @@ router.get('/acceptLoanByAdmin', jwtServices.verify, RoleInstance.checkRole([def
 router.get('/completeLoanByAdmin', jwtServices.verify, RoleInstance.checkRole([defaultRoles.Admin]), Validate.query(validateLoan.changeStatus), controller.completeLoanByAdminAsync)
 router.get('/rejectLoanByAdmin', jwtServices.verify, RoleInstance.checkRole([defaultRoles.Admin]), Validate.query(validateLoan.changeStatus), controller.rejectLoanByAdminAsync)
 router.get('/getStatusLoan', jwtServices.verify, controller.findLoanAsync)
-router.get('/getLoanByStatus', jwtServices.verify, RoleInstance.checkRole([defaultRoles.Admin]),  Validate.query(validateLoan.getStatus),controller.findLoanByStatusAdminAsync)
-router.get('/getTypeLoanClient', jwtServices.verify,  Validate.query(validateLoan.getTypeLoanClient),controller.findTypeLoanClient)
+router.get('/getLoanByStatus', jwtServices.verify, RoleInstance.checkRole([defaultRoles.Admin]), Validate.query(validateLoan.getStatus), controller.findLoanByStatusAdminAsync)
+router.get('/getTypeLoanClient', jwtServices.verify, Validate.query(validateLoan.getTypeLoanClient), controller.findTypeLoanClient)
+router.get('/abc', jwtServices.verify, controller.abc)
 
 module.exports = router

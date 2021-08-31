@@ -1,7 +1,12 @@
 const ACCOUNT = require('../models/Account.model')
 const LOAN = require('../models/Loan.model')
 const TYPE_LOAN = require('../models/TypeLoan.model')
-const SPENDING_LOAN = require('../models/SpendingLoan.model')
+const { cloneData } = require('./statementInfo.service')
+const userService=require('./user.services')
+const familyService=require('./familyPhone.service')
+const accountBankService=require('./accountBank.service')
+const identityService=require('./identityCard.service')
+
 exports.createLoanAsync = async (payload) => {
   try {
     const exitsLoan = await LOAN.findOne({
@@ -10,8 +15,27 @@ exports.createLoanAsync = async (payload) => {
         $lt: 2
       }
     })
-    console.log(`LHA:  ===> file: loan.service.js ===> line 15 ===> exitsLoan`, exitsLoan)
     if (!exitsLoan) {
+
+      const user = await userService.findUserByCreatorUser({
+        creatorUser: id
+      })
+      //family
+      const family = await familyService.findAllFamilyPhoneByCreatorUser({
+        creatorUser: id
+      })
+      //accountBank
+      const accountBank = await accountBankService.findAllAccountBankByCreatorUser({
+        creatorUser: id
+      })
+      //identity
+    
+      const identity = await identityService.findAllIdentityByCreatorUser({
+        creatorUser: id
+      })
+
+
+
       const typeLoan = await TYPE_LOAN.findById(payload.typeLoan)
       if (typeLoan) {
         const endTime = new Date().setMonth(new Date().getMonth() - Number(typeLoan.monthLoan))
@@ -25,6 +49,7 @@ exports.createLoanAsync = async (payload) => {
         }
         const loan = new LOAN(body)
         await loan.save()
+        await cloneData(payload.creatorUser)
         return {
           message: 'Successfully accept loan',
           success: true,
