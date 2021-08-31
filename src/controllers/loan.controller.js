@@ -47,7 +47,6 @@ exports.findTypeLoanAsync = async (req, res, next) => {
 			limit: req.query.limit || 15
 		}
 		const resServices = await typeLoanServices.findTypeLoanAsync(query);
-		console.log(`LHA:  ===> file: loan.controller.js ===> line 53 ===> resServices`, resServices)
 		if (!resServices.success) {
 			return controller.sendSuccess(res, {}, 300, resServices.message);
 		}
@@ -137,56 +136,89 @@ exports.rejectLoanByAdminAsync = async (req, res, next) => {
 }
 
 
-// exports.deletedLoanByAdminAsync=async (req,res,next)=>{
-// 	try {
-// 		const payload = req.query.idLoan
-// 		const resServices = await loanServices.deleteLoanAsync(payload)
-// 		if (!resServices.success) {
-// 			return controller.sendSuccess(res, {}, 300, resServices.message);
-// 		}
-// 		return controller.sendSuccess(
-// 			res, {},
-// 			200,
-// 			resServices.message
-// 		);
-// 	} catch (e) {
-// 		console.log(e)
-// 		return controller.sendError(res)
-// 	}
-// }
-// exports.createTypeLoanAsync=(req,res,next)=>{
-// 	try {
-// 		const resServices = await loanServices.findAllLoanAsync();
-// 		if (!resServices.success) {
-// 			return controller.sendSuccess(res, {}, 300, resServices.message);
-// 		}
-// 		return controller.sendSuccess(
-// 			res,
-// 			resServices.data,
-// 			200,
-// 			resServices.message
-// 		);
-// 	} catch (err) {
-// 		return controller.sendError(res);
-// 	}
-// }
+exports.findLoanAsync = async (req, res, next) => {
+	try {
+		const {
+			decodeToken
+		} = req.value.body;
+		const id = decodeToken.data.id;
+		const role = decodeToken.data.role
+		if (role === 1) {
+			const resServices = await loanServices.findAllLoanAsync();
+			if (!resServices.success) {
+				return controller.sendSuccess(res, {}, 300, resServices.message);
+			}
+			return controller.sendSuccess(
+				res,
+				resServices.data,
+				200,
+				resServices.message
+			);
+		}
+		const resServices = await loanServices.findAllLoanAsync(id);
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			200,
+			resServices.message
+		);
 
-// exports.findAllLoanAsync = async (req, res, next) => {
-// 	try {
-// 		const resServices = await loanServices.findAllLoanAsync();
-// 		if (!resServices.success) {
-// 			return controller.sendSuccess(res, {}, 300, resServices.message);
-// 		}
-// 		return controller.sendSuccess(
-// 			res,
-// 			resServices.data,
-// 			200,
-// 			resServices.message
-// 		);
-// 	} catch (err) {
-// 		return controller.sendError(res);
-// 	}
-// };
+	} catch (err) {
+		return controller.sendError(res);
+	}
+};
+exports.findLoanByStatusAdminAsync = async (req, res, next) => {
+	try {
+		const query = {
+			skip: req.value.query.skip || 0,
+			limit: req.value.query.limit || 15
+
+		}
+		const resServices = await loanServices.findAllLoanByStatusAsync(Number(req.value.query.status), query);
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			200,
+			resServices.message
+		);
+
+	} catch (err) {
+		
+		return controller.sendError(res);
+	}
+}
+
+exports.findTypeLoanClient = async (req,res,next) => {
+	try {
+		const query = {
+			skip: req.value.query.skip || 0,
+			limit: req.value.query.limit || 15,
+			money:req.value.query.money
+
+		}
+		const resServices = await typeLoanServices.findTypeLoanClientAsync( query);
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			200,
+			resServices.message
+		);
+
+	} catch (err) {
+		console.log(err)
+		return controller.sendError(res);
+	}
+}
+
 // exports.updateLoanAsync = async (req, res, next) => {
 // 	try {
 // 		const {
@@ -203,48 +235,6 @@ exports.rejectLoanByAdminAsync = async (req, res, next) => {
 // 	} catch (error) {
 // 		// bug
 // 		console.log(error);
-// 		return controller.sendError(res);
-// 	}
-// };
-// exports.deleteLoanAsync = async (req, res, next) => {
-// 	try {
-// 		const id = req.value.params.param;
-// 		const resServices = await loanServices.deleteLoanAsync(id);
-// 		return controller.sendSuccess(
-// 			res,
-// 			resServices.data,
-// 			200,
-// 			resServices.message
-// 		);
-// 	} catch (error) {
-// 		// bug
-// 		console.log(error);
-// 		return controller.sendError(res);
-// 	}
-// };
-
-// exports.changeStatusLoanAsync = async (req, res, next) => {
-// 	try {
-// 		const {
-// 			decodeToken
-// 		} = req.value.body;
-// 		const id = decodeToken.data;
-// 		const resServices = await loanServices.changeStatusLoanAsync(id, req.body);
-// 		if (!resServices.success) {
-// 			return controller.sendSuccess(
-// 				res,
-// 				resServices.success,
-// 				300,
-// 				resServices.message
-// 			);
-// 		}
-// 		return controller.sendSuccess(
-// 			res,
-// 			resServices.success,
-// 			200,
-// 			resServices.message
-// 		);
-// 	} catch (error) {
 // 		return controller.sendError(res);
 // 	}
 // };
