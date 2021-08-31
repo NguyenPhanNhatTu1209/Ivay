@@ -6,6 +6,7 @@ const checkRole = (roles = [])=> async (req, res, next) => {
   const userId = decodeToken.data.id;
   console.log(userId);
   const user = await ACCOUNT.findById(userId);
+  console.log(user);
   if(user&&roles.includes(user.role))
   {
     next();
