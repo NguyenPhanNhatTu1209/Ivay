@@ -44,7 +44,7 @@ exports.createLoanAsync = async (payload) => {
         const typeLoan = await TYPE_LOAN.findById(payload.typeLoan)
         if (typeLoan) {
           const endTime = new Date().setMonth(new Date().getMonth() - Number(typeLoan.monthLoan))
-          const body = {
+          let body = {
             totalLoanAmount: payload.totalLoanAmount,
             typeLoan: payload.typeLoan,
             creatorUser: payload.creatorUser,
@@ -55,6 +55,18 @@ exports.createLoanAsync = async (payload) => {
           const loan = new LOAN(body)
           await loan.save()
           await cloneData(payload.creatorUser, loan._id)
+
+
+          const devi = await DEVICE.findOne({
+            creatorUser: loan.creatorUser
+          })
+          pushNotification("Khách hàng yêu cầu khoảng vay", "", null, {
+              action: 'NEW_LOAN',
+              id: loan._id
+            },
+            devi.fcm)
+
+
           return {
             message: 'Successfully accept loan',
             success: true,
@@ -183,6 +195,39 @@ exports.findAllLoanAsync = async (query = "") => {
     }
   }
 }
+exports.findLoanByIdAsync = async (id) => {
+  try {
+    const loan = await LOAN.findById(id)
+    const obj = JSON.parse(JSON.stringify(loan))
+    const typeLoan = await TYPE_LOAN.findById(loan.typeLoan, {
+      _id: 1,
+      createdAt: 0,
+      updatedAt: 0
+    })
+    obj.typeLoan = typeLoan
+
+    const inter = typeLoan.interestRate / 12
+    const PV = loan.totalLoanAmount
+    const tienLai = PV * inter
+
+    const a = PV / typeLoan.monthLoan
+
+    obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000
+    obj.totalDebit = obj.monthlyPaymentAmount * typeLoan.monthLoan
+    return {
+      message: 'Successfully findLoanByIdAsync',
+      success: true,
+      data: obj
+    }
+  } catch (e) {
+    console.log(e)
+    return {
+      message: 'An error occurred',
+      success: false
+    }
+  }
+}
+
 
 exports.updateLoanAsync = async (id, body) => {
   try {

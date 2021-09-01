@@ -196,6 +196,24 @@ exports.findLoanByStatusAdminAsync = async (req, res, next) => {
 	}
 }
 
+exports.findLoanByIdAdminAsync = async (req, res, next) => {
+	try {
+		const resServices = await loanServices.findLoanByIdAsync(req.query.id);
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			200,
+			resServices.message
+		);
+
+	} catch (err) {
+
+		return controller.sendError(res);
+	}
+}
 exports.findTypeLoanClient = async (req, res, next) => {
 	try {
 		const query = {
