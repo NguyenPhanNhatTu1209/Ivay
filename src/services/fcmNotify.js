@@ -64,6 +64,7 @@ const pushMultipleNotification = async (
   tokenReceives = []
 ) => {
   try {
+    console.log(data)
     if (data.history) data.history = "";
     const payload = {
       notification: {
