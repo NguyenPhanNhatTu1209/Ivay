@@ -426,6 +426,7 @@ exports.updateStepFamilyPhone = async (req, res, next) => {
 exports.getAllInformationUser = async (req, res, next) => {
 	try {
 		const { decodeToken } = req.value.body;
+		console.log(decodeToken);
 		const id = decodeToken.data.id;
 		console.log(id);
 		const payload = { creatorUser: id };

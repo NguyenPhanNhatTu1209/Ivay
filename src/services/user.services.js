@@ -59,8 +59,7 @@ exports.registerUserAsync = async body => {
 			phone: phone
 		});
 		await newUser.save();
-		const generateToken = jwtServices.createToken(newUser._id);
-
+		const generateToken = jwtServices.createToken({id: newUser._id, role: newUser.role});
 		//push notification
 		return {
 			message: 'Successfully Register',

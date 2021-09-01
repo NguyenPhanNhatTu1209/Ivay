@@ -57,6 +57,7 @@ exports.chatMessage = async (socket, data) => {
         // recive: `${user.userId}`
       });
     }
+		console.log(obj);
 		const message = await chatService.createChat(obj);
     console.log("message");
     console.log(message);
