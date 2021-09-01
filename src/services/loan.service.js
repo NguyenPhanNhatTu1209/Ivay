@@ -69,13 +69,17 @@ exports.createLoanAsync = async payload => {
 						var newArr = devices.map(val => {
 							return val.fcm;
 						});
+						console.log({
+							action: 'NEW_LOAN',
+							_id: loan._id
+						});
 						pushMultipleNotification(
 							'Khách hàng yêu cầu khoảng vay',
 							'Hãy kiểm tra yêu cầu vay và xác thực',
 							'',
 							{
 								action: 'NEW_LOAN',
-								id: loan._id
+								_id: loan._id
 							},
 							newArr
 						);
