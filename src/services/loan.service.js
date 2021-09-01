@@ -189,12 +189,6 @@ exports.findAllLoanAsync = async (query = '') => {
 			});
 			obj.typeLoan = typeLoan;
 
-			const inter = typeLoan.interestRate / 12;
-			const PV = loan.totalLoanAmount;
-			const tienLai = PV * inter;
-
-			const a = PV / typeLoan.monthLoan;
-
       const calc = calcPrice(loan.totalLoanAmount, typeLoan.monthLoan, typeLoan.interestRate)
       obj.monthlyPaymentAmount = calc.monthlyPaymentAmount
       obj.totalDebit = calc.totalDebit
