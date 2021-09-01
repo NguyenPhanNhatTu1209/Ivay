@@ -75,37 +75,40 @@ exports.init = async () => {
       );
     }
 
-	socket.on('UPDATE_DEVICE_CSS', async data => {
-		const user = this.findUserBySocket(socket.id);
-		const device = await DEVICE.findOne({
-			deviceUUid: data.deviceUUid,
-			creatorUser: user.userId
-		});
-		if (device != null) {
-			deviceId = device._id;
-			(device.appVersion = data.appVersion),
-				(device.deviceModel = data.deviceModel),
-				(device.deviceUUid = data.deviceUUid),
-				(device.status = 1);
-			device.fcm = user.fcm;
-			await device.save();
-		} else {
-			data.fcm = user.fcm;
-			data.status = 1;
-			data.creatorUser = account._id;
-			const device1 = await DEVICE.create(data);
-			deviceId = device1._id;
-		}
-	});
+    socket.on("UPDATE_DEVICE_CSS", async (data) => {
+      const user = this.findUserBySocket(socket.id);
+      const device = await DEVICE.findOne({
+        deviceUUid: data.deviceUUid,
+        creatorUser: user.userId,
+      });
+      if (device != null) {
+        device.appVersion = data.appVersion;
+        device.deviceModel = data.deviceModel;
+        device.deviceUUid = data.deviceUUid;
+        device.status = 1;
+        device.fcm = user.fcm;
+        await device.save();
+      } else {
+        data.fcm = user.fcm;
+        data.status = 1;
+        data.creatorUser = account._id;
+        await DEVICE.create(data);
+      }
+      console.log("CREATE_DEVICE_SUCCESS");
+    });
 
-	socket.on('DELETE_DEVICE_CSS', async data => {
-		const user = this.findUserBySocket(socket.id);
-		const device = await DEVICE.findOneAndUpdate({
-			deviceUUid: data.deviceUUid,
-			creatorUser: user.id,
-			status: 1,
-		}, {status: 0});
-	});
+    socket.on("DELETE_DEVICE_CSS", async (data) => {
+      const user = this.findUserBySocket(socket.id);
+      await DEVICE.findOneAndUpdate(
+        {
+          deviceUUid: data.deviceUUid,
+          creatorUser: user.id,
+          status: 1,
+        },
+        { status: 0 }
+      );
+      console.log("DELETE_DEVICE_SUCCESS");
+    });
 
     console.log("connect Socket", global.listUser.length);
     socket.on(defaultChatSocket.sendMessageCSS, (data) =>
