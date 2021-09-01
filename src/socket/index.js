@@ -36,14 +36,10 @@ global.listUser = [];
 
 exports.init = async () => {
   global.io.on("connection", async (socket) => {
-    console.log("abc");
     const header = socket.handshake.query.token;
     const fcm = socket.handshake.query.fcm;
-    console.log("header: ", header);
-    console.log("fcm: ", fcm);
 
     if (!header) {
-      // disconnect socket
       io.sockets.sockets[socket.id].disconnect();
     } else {
       const token = header.split(" ")[1];
@@ -51,12 +47,9 @@ exports.init = async () => {
         token,
         configEnv.ACCESS_TOKEN_SECRET,
         async (err, decodedFromToken) => {
-          console.log("err", err);
           if (err) {
             io.sockets.sockets[socket.id].disconnect();
           } else {
-            console.log(decodedFromToken.data.id);
-            console.log(global.listUser);
             const account = await ACCOUNT.findById(decodedFromToken.data.id);
             if (account) {
               global.listUser.push({
@@ -66,8 +59,8 @@ exports.init = async () => {
                 role: account.role,
               });
               console.log(
-                `LHA:  ===> file: index.js ===> line 62 ===> global.listUser`,
-                global.listUser
+                `IVAY CCU: `,
+                global.listUser.length,
               );
             }
           }
@@ -77,18 +70,15 @@ exports.init = async () => {
 
     socket.on("UPDATE_DEVICE_CSS", async (data) => {
       const user = this.findUserBySocket(socket.id);
-      const device = await DEVICE.findOne({
+      const device = await DEVICE.findOneAndUpdate({
         deviceUUid: data.deviceUUid,
         creatorUser: user.userId,
-      });
-      if (device != null) {
-        device.appVersion = data.appVersion;
-        device.deviceModel = data.deviceModel;
-        device.deviceUUid = data.deviceUUid;
-        device.status = 1;
-        device.fcm = user.fcm;
-        await device.save();
-      } else {
+        status: 0,
+      }, {
+        status: 1,
+        fcm = user.fcm,
+      }, {new: true},);
+      if (!device) {
         data.fcm = user.fcm;
         data.status = 1;
         data.creatorUser = account._id;
@@ -107,7 +97,6 @@ exports.init = async () => {
         },
         { status: 0 }
       );
-      console.log("DELETE_DEVICE_SUCCESS");
     });
 
     console.log("connect Socket", global.listUser.length);
