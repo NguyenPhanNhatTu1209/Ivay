@@ -73,18 +73,16 @@ exports.init = async () => {
       const device = await DEVICE.findOneAndUpdate({
         deviceUUid: data.deviceUUid,
         creatorUser: user.userId,
-        status: 0,
       }, {
-        status: 1,
+        statusDevice: 1,
         fcm: user.fcm,
       }, {new: true},);
       if (!device) {
         data.fcm = user.fcm;
-        data.status = 1;
+        data.statusDevice = 1;
         data.creatorUser = account._id;
         await DEVICE.create(data);
       }
-      console.log("CREATE_DEVICE_SUCCESS");
     });
 
     socket.on("DELETE_DEVICE_CSS", async (data) => {
@@ -93,9 +91,9 @@ exports.init = async () => {
         {
           deviceUUid: data.deviceUUid,
           creatorUser: user.id,
-          status: 1,
+          statusDevice: 1,
         },
-        { status: 0 }
+        { statusDevice: 0 }
       );
     });
 
