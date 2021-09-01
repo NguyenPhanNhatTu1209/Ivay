@@ -97,16 +97,17 @@ exports.chatMessage = async (socket, data) => {
 				role: 1
 			});
 			const devicesAdmin = await DEVICE.find({ creatorUser: admin._id });
-			const user1 = await ACCOUNT.findById(user.userId);
+			const user1 = await ACCOUNT.findById(socket.Room);
 			const datafcm = convertObjectFieldString(Object.assign(dataMessage));
 			var newArr = devicesAdmin.map((val) => {
 				return val.fcm;
 			})
 			console.log(newArr);
+			console.log(user1)
 			pushMultipleNotification(`Tin nhắn từ ${user1.phone}`,`${message.data.content}`,'',datafcm,newArr);
 		} else if (user.role === 1) {
 			console.log('Admin');
-			const deviceUser = await DEVICE.find({creatorUser: idAccount});
+			const deviceUser = await DEVICE.find({creatorUser: socket.Room});
 			const datafcm = converObjectFieldString(
 				Object.assign(dataMessage)
 			);
