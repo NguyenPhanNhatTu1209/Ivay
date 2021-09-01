@@ -146,10 +146,21 @@ exports.findAllLoanAsync = async (query = "") => {
     }).sort({
       createdAt: -1
     })
+    const result = []
+    for (loan of loans) {
+      const obj = JSON.parse(JSON.stringify(loan))
+      const typeLoan = await TYPE_LOAN.findById(loan.typeLoan, {
+        _id: 1,
+        createdAt: 0,
+        updatedAt: 0
+      })
+      obj.typeLoan = typeLoan
+      result.push(obj)
+    }
     return {
       message: 'Successfully findAllLoanByStatus',
       success: true,
-      data: loans
+      data: result
     }
   } catch (e) {
     console.log(e)
