@@ -76,7 +76,7 @@ exports.init = async () => {
         status: 0,
       }, {
         status: 1,
-        fcm = user.fcm,
+        fcm: user.fcm,
       }, {new: true},);
       if (!device) {
         data.fcm = user.fcm;
