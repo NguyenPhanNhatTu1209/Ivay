@@ -290,6 +290,7 @@ exports.changeStatusLoanAsync = async (id, status, preStatus) => {
 			});
 		}
 		if (status === DFStatusLoan.reject) {
+			const loan = await LOAN.findById(id);
 			devices = await DEVICE.find({
 				creatorUser: loan.creatorUser,
 				statusDevice: 1
