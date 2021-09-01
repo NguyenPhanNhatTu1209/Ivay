@@ -8,11 +8,10 @@ const Schema = mongoose.Schema
 const LOAN = new Schema({
   endLoan: defaultModel.date,
   typeLoan: defaultModel.stringRef,
-
   startLoan: defaultModel.date,
   statusLoan: defaultModel.number,
   totalLoanAmount: defaultModel.number,
-  creatorUser: defaultModel.stringRef
+  creatorUser: defaultModel.stringRef,
 }, {
   timestamps: true
 })
