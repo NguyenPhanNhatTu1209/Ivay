@@ -1,14 +1,20 @@
-const ACCOUNT = require('../models/Account.model');
-const LOAN = require('../models/Loan.model');
-const TYPE_LOAN = require('../models/TypeLoan.model');
-const { cloneData } = require('./statementInfo.service');
-const userService = require('./user.services');
-const familyService = require('./familyPhone.service');
-const accountBankService = require('./accountBank.service');
-const identityService = require('./identityCard.service');
-const { DFStatusLoan } = require('../config');
-const DEVICE = require('../models/Device.model');
-const { pushMultipleNotification } = require('./fcmNotify');
+const ACCOUNT = require('../models/Account.model')
+const LOAN = require('../models/Loan.model')
+const TYPE_LOAN = require('../models/TypeLoan.model')
+const {
+  cloneData
+} = require('./statementInfo.service')
+const userService = require('./user.services')
+const familyService = require('./familyPhone.service')
+const accountBankService = require('./accountBank.service')
+const identityService = require('./identityCard.service')
+const {
+  DFStatusLoan
+} = require('../config')
+const DEVICE = require('../models/Device.model')
+const {
+  calcPrice
+} = require('../helper')
 
 exports.createLoanAsync = async payload => {
 	try {
@@ -142,15 +148,10 @@ exports.findAllLoanByStatusAsync = async (status, query) => {
 			delete objTypeLoan.updatedAt;
 			delete objTypeLoan.__v;
 
-			obj.typeLoan = objTypeLoan;
-			const inter = objTypeLoan.interestRate / 12;
-			const PV = loan.totalLoanAmount;
-			const tienLai = PV * inter;
-
-			const a = PV / objTypeLoan.monthLoan;
-
-			obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000;
-			obj.totalDebit = obj.monthlyPaymentAmount * objTypeLoan.monthLoan;
+      obj.typeLoan = objTypeLoan
+      const calc = calcPrice(loan.totalLoanAmount, objTypeLoan.monthLoan, objTypeLoan.interestRate)
+      obj.monthlyPaymentAmount = calc.monthlyPaymentAmount
+      obj.totalDebit = calc.totalDebit
 
 			result.push(obj);
 		}
@@ -188,61 +189,52 @@ exports.findAllLoanAsync = async (query = '') => {
 			});
 			obj.typeLoan = typeLoan;
 
-			const inter = typeLoan.interestRate / 12;
-			const PV = loan.totalLoanAmount;
-			const tienLai = PV * inter;
+      const calc = calcPrice(loan.totalLoanAmount, typeLoan.monthLoan, typeLoan.interestRate)
+      obj.monthlyPaymentAmount = calc.monthlyPaymentAmount
+      obj.totalDebit = calc.totalDebit
 
-			const a = PV / typeLoan.monthLoan;
+      result.push(obj)
+    }
+    return {
+      message: 'Successfully findAllLoanByStatus',
+      success: true,
+      data: result
+    }
+  } catch (e) {
+    console.log(e)
+    return {
+      message: 'An error occurred',
+      success: false
+    }
+  }
+}
+exports.findLoanByIdAsync = async (id) => {
+  try {
+    const loan = await LOAN.findById(id)
+    const obj = JSON.parse(JSON.stringify(loan))
+    const typeLoan = await TYPE_LOAN.findById(loan.typeLoan, {
+      _id: 1,
+      createdAt: 0,
+      updatedAt: 0
+    })
+    obj.typeLoan = typeLoan
 
-			obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000;
-			obj.totalDebit = obj.monthlyPaymentAmount * typeLoan.monthLoan;
-			result.push(obj);
-		}
-		return {
-			message: 'Successfully findAllLoanByStatus',
-			success: true,
-			data: result
-		};
-	} catch (e) {
-		console.log(e);
-		return {
-			message: 'An error occurred',
-			success: false
-		};
-	}
-};
-exports.findLoanByIdAsync = async id => {
-	try {
-		const loan = await LOAN.findById(id);
-		const obj = JSON.parse(JSON.stringify(loan));
-		const typeLoan = await TYPE_LOAN.findById(loan.typeLoan, {
-			_id: 1,
-			createdAt: 0,
-			updatedAt: 0
-		});
-		obj.typeLoan = typeLoan;
-
-		const inter = typeLoan.interestRate / 12;
-		const PV = loan.totalLoanAmount;
-		const tienLai = PV * inter;
-
-		const a = PV / typeLoan.monthLoan;
-
-		obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000;
-		obj.totalDebit = obj.monthlyPaymentAmount * typeLoan.monthLoan;
-		return {
-			message: 'Successfully findLoanByIdAsync',
-			success: true,
-			data: obj
-		};
-	} catch (e) {
-		console.log(e);
-		return {
-			message: 'An error occurred',
-			success: false
-		};
-	}
-};
+    const calc = calcPrice(loan.totalLoanAmount, typeLoan.monthLoan, typeLoan.interestRate)
+    obj.monthlyPaymentAmount = calc.monthlyPaymentAmount
+    obj.totalDebit = calc.totalDebit
+    return {
+      message: 'Successfully findLoanByIdAsync',
+      success: true,
+      data: obj
+    }
+  } catch (e) {
+    console.log(e)
+    return {
+      message: 'An error occurred',
+      success: false
+    }
+  }
+}
 
 exports.updateLoanAsync = async (id, body) => {
 	try {
