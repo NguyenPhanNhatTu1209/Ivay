@@ -4,6 +4,7 @@ const sockets = require('./index');
 const USER = require('../models/User.model');
 const ACCOUNT = require('../models/Account.model');
 const ROOM = require('../models/Room.model');
+const DEVICE = require('../models/Device.model');
 const { pushNotification, pushMultipleNotification } = require('../services/fcmNotify');
 const { convertObjectFieldString } = require('../helper');
 exports.joinRoom = async (socket, data) => {
