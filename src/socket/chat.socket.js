@@ -4,6 +4,7 @@ const sockets = require('./index');
 const USER = require('../models/User.model');
 const ACCOUNT = require('../models/Account.model');
 const ROOM = require('../models/Room.model');
+const DEVICE = require('../models/Device.model');
 const { pushNotification, pushMultipleNotification } = require('../services/fcmNotify');
 const { convertObjectFieldString } = require('../helper');
 exports.joinRoom = async (socket, data) => {
@@ -96,23 +97,24 @@ exports.chatMessage = async (socket, data) => {
 				role: 1
 			});
 			const devicesAdmin = await DEVICE.find({ creatorUser: admin._id });
-			const user1 = await ACCOUNT.findById(user.userId);
+			const user1 = await ACCOUNT.findById(socket.Room);
 			const datafcm = convertObjectFieldString(Object.assign(dataMessage));
 			var newArr = devicesAdmin.map((val) => {
 				return val.fcm;
 			})
 			console.log(newArr);
-			pushMultipleNotification(`Tin nhắn từ ${user1.phone}`,`${message.data.content}`,'',datafcm,newArr);
+			console.log(user1)
+			pushMultipleNotification(`Tin nhắn từ ${user1.phone}`,`${message.data.message}`,'',datafcm,newArr);
 		} else if (user.role === 1) {
 			console.log('Admin');
-			const deviceUser = await DEVICE.find({creatorUser: idAccount});
-			const datafcm = converObjectFieldString(
+			const deviceUser = await DEVICE.find({creatorUser: socket.Room});
+			const datafcm = convertObjectFieldString(
 				Object.assign(dataMessage)
 			);
 			var newArr = deviceUser.map((val) => {
 				return val.fcm;
 			})
-			pushMultipleNotification(`CSKH Trực Tuyến`,`${message.data.content}`,'',datafcm,newArr);
+			pushMultipleNotification(`CSKH Trực Tuyến`,`${message.data.message}`,'',datafcm,newArr);
 		}
 	} else {
 		sockets.emitToSocketId(socket.id, defaultChatSocket.sendMessageSSC, {

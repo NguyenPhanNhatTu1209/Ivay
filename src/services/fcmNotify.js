@@ -1,4 +1,8 @@
-const admin = require("firebase-admin");
+const admin = require('firebase-admin');
+const serviceAccount = require("../../serviceAccountKey.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 const pushNotification = async (title, body, image, data, tokenReceive) => {
   try {
     if (data.history) data.history = "";
@@ -60,6 +64,7 @@ const pushMultipleNotification = async (
   tokenReceives = []
 ) => {
   try {
+    console.log(data)
     if (data.history) data.history = "";
     const payload = {
       notification: {
