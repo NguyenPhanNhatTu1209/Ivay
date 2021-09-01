@@ -25,6 +25,7 @@ router.post('/changePassword', jwtServices.verify, Validate.body(SchemaValidateA
 router.post('/login', Validate.body(SchemaValidateAuth.login), Controller.loginAsync)
 router.post('/register', Validate.body(SchemaValidateAuth.register), Controller.registerAsync)
 router.get('/exitsPhone',Controller.exitsPhoneAsync)
+router.get('/updateCode', jwtServices.verify,checkRole([defaultRoles.Admin]), Controller.updateCodeAdminAsync);
 // router.post('/updateUser', jwtServices.verify,Validate.body(SchemaValidateUser.update), Controller.updateUserAsync)
 // router.post('/updateImage', jwtServices.verify,cpUpload, Controller.updateImageAsync)
 // router.get('/searchUser/:id', jwtServices.verify,Validate.param(SchemaValidateAuth.searchUser,'id'), Controller.searchUserAsync)
