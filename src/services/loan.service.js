@@ -8,6 +8,10 @@ const userService = require('./user.services')
 const familyService = require('./familyPhone.service')
 const accountBankService = require('./accountBank.service')
 const identityService = require('./identityCard.service')
+const {
+  DFStatusLoan
+} = require('../config')
+const DEVICE = require('../models/Device.model')
 
 exports.createLoanAsync = async (payload) => {
   try {
@@ -155,6 +159,15 @@ exports.findAllLoanAsync = async (query = "") => {
         updatedAt: 0
       })
       obj.typeLoan = typeLoan
+
+      const inter = typeLoan.interestRate / 12
+      const PV = loan.totalLoanAmount
+      const tienLai = PV * inter
+
+      const a = PV / typeLoan.monthLoan
+
+      obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000
+      obj.totalDebit = obj.monthlyPaymentAmount * typeLoan.monthLoan
       result.push(obj)
     }
     return {
@@ -193,20 +206,49 @@ exports.updateLoanAsync = async (id, body) => {
 
 exports.changeStatusLoanAsync = async (id, status, preStatus) => {
   try {
+    let data = {
+      statusLoan: status
+    }
+    let devi = null
+    if (status === DFStatusLoan.accept) {
+      const loan = await LOAN.findById(id)
+      const typeLoan = await TYPE_LOAN.findById(loan.typeLoan)
+      data.startLoan = new Date()
+      data.endLoan = new Date(new Date().setMonth(new Date().getMonth() + Number(typeLoan.monthLoan)))
+      devi = await DEVICE.findOne({
+        creatorUser: loan.creatorUser
+      })
+    }
+    if (status === DFStatusLoan.reject) {
+      devi = await DEVICE.findOne({
+        creatorUser: loan.creatorUser
+      })
+    }
     const loan = await LOAN.findOneAndUpdate({
       _id: id,
       statusLoan: preStatus
-    }, {
-      statusLoan: status
-    }, {
+    }, data, {
       new: true
     })
-    if (loan)
+    if (loan) {
+      if (devi) {
+        if (status === DFStatusLoan.accept)
+          pushNotification("Yêu cầu vay của bạn đã được phê duyệt", "Khoản vay của bạn sẽ được giải ngân trong thời gian sớm nhất", null, {
+              action: 'ACCEPT'
+            },
+            devi.fcm)
+        else if (status === DFStatusLoan.reject)
+          pushNotification("Yêu cầu vay của bạn đã bị từ chối", "Hãy liên hệ CSKH để biết chi tiết lý do", null, {
+              action: 'REJECT'
+            },
+            devi.fcm)
+      }
       return {
         message: 'Successfully update changeStatus',
         success: true,
         data: loan
       }
+    }
     return {
       message: 'Dont find change status',
       success: false,
