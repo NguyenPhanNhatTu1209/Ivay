@@ -64,7 +64,7 @@ exports.findAllIdentityByCreatorUser = async (body) => {
 }
 exports.findAllIdentityByCreatorUserSK = async (body) => {
   try {
-    const identities = await IDENTITY_CARDSK.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0,creatorUser:0});
+    const identities = await IDENTITY_CARDSK.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0});
     console.log("identities");
     console.log(identities);
     

@@ -6,11 +6,15 @@ const familyPhoneServices = require('../services/familyPhone.service');
 const userServices = require('../services/user.services');
 userServices;
 const uploadS3Services = require('../services/uploadS3.service');
-const { defaultRoles } = require('../config/defineModel');
+const {
+	defaultRoles
+} = require('../config/defineModel');
 
 exports.findUserByIdAsync = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const _id = decodeToken.data.id;
 		const resServices = await authServices.findUser(_id);
 		return controller.sendSuccess(
@@ -74,11 +78,12 @@ exports.findAllUserAsync = async (req, res, next) => {
 // ==== New Code
 exports.createStepUser = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
-		const payload = Object.assign(
-			{
+		const payload = Object.assign({
 				creatorUser: id
 			},
 			req.value.body
@@ -107,12 +112,13 @@ exports.createStepUser = async (req, res, next) => {
 
 exports.createStepIdentity = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		console.log(id);
 		delete req.value.body.decodeToken;
-		const payload = Object.assign(
-			{
+		const payload = Object.assign({
 				creatorUser: id,
 				identityCardTB: `IdentityCardTB/${id}`,
 				identityCardHold: `IdentityCardHold/${id}`,
@@ -157,33 +163,30 @@ exports.createStepIdentity = async (req, res, next) => {
 };
 exports.uploadStepIdentity = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
 		const types = req.body.types;
 		const images = req.body.images;
 		data = [];
-		for (let i=0;i<images.length;i++) {
-			if(images[i] == 0)
-			{
+		for (let i = 0; i < images.length; i++) {
+			if (images[i] == 0) {
 				var body = {
 					name: `IdentityCardFE/${id}`,
 					type: types[i]
 				}
 				var upload = await uploadS3Services.uploadImageS3(body);
 				data.push(upload);
-			}
-			else if(images[i] == 1)
-			{
+			} else if (images[i] == 1) {
 				var body = {
 					name: `IdentityCardTB/${id}`,
 					type: types[i]
 				}
 				var upload = await uploadS3Services.uploadImageS3(body);
 				data.push(upload);
-			}
-			else if(images[i] == 2)
-			{
+			} else if (images[i] == 2) {
 				var body = {
 					name: `IdentityCardHold/${id}`,
 					type: types[i]
@@ -202,11 +205,12 @@ exports.uploadStepIdentity = async (req, res, next) => {
 
 exports.createStepAccountBank = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
-		const payload = Object.assign(
-			{
+		const payload = Object.assign({
 				creatorUser: id
 			},
 			req.value.body
@@ -237,11 +241,12 @@ exports.createStepAccountBank = async (req, res, next) => {
 
 exports.createStepFamilyPhone = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
-		const payload = Object.assign(
-			{
+		const payload = Object.assign({
 				creatorUser: id
 			},
 			req.value.body
@@ -272,11 +277,12 @@ exports.createStepFamilyPhone = async (req, res, next) => {
 
 exports.updateStepUser = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
-		const payload = Object.assign(
-			{
+		const payload = Object.assign({
 				creatorUser: id
 			},
 			req.value.body
@@ -304,11 +310,12 @@ exports.updateStepUser = async (req, res, next) => {
 };
 exports.updateStepIdentity = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
-		const payload = Object.assign(
-			{
+		const payload = Object.assign({
 				creatorUser: id,
 				identityCardTB: `IdentityCardTB/${id}`,
 				identityCardHold: `IdentityCardHold/${id}`,
@@ -353,11 +360,12 @@ exports.updateStepIdentity = async (req, res, next) => {
 };
 exports.updateStepAccountBank = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
-		const payload = Object.assign(
-			{
+		const payload = Object.assign({
 				creatorUser: id
 			},
 			req.value.body
@@ -389,11 +397,12 @@ exports.updateStepAccountBank = async (req, res, next) => {
 };
 exports.updateStepFamilyPhone = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		delete req.value.body.decodeToken;
-		const payload = Object.assign(
-			{
+		const payload = Object.assign({
 				creatorUser: id
 			},
 			req.value.body
@@ -425,11 +434,14 @@ exports.updateStepFamilyPhone = async (req, res, next) => {
 };
 exports.getAllInformationUser = async (req, res, next) => {
 	try {
-		const { decodeToken } = req.value.body;
-		console.log(decodeToken);
+		const {
+			decodeToken
+		} = req.value.body;
 		const id = decodeToken.data.id;
 		console.log(id);
-		const payload = { creatorUser: id };
+		const payload = {
+			creatorUser: id
+		};
 		const account = await userServices.findAccountById(id);
 		console.log(account);
 		const resServicesUser = await userServices.findUserByCreatorUser(payload);
@@ -457,7 +469,7 @@ exports.getAllInformationUser = async (req, res, next) => {
 				resServicesIdentityCard.data.identityCardHold
 			];
 			let arrLink = [];
-			for (let i= 0;i<arr.length;i++) {
+			for (let i = 0; i < arr.length; i++) {
 				var upload = await uploadS3Services.getImageS3(arr[i]);
 				arrLink.push(upload);
 			}
@@ -503,16 +515,17 @@ exports.getAllInFormationSK = async (req, res, next) => {
 	try {
 		const id = req.query.id;
 		console.log(id);
-		const payload = { creatorUser: id };
-		const account = await userServices.findAccountById(id);
-		console.log(account);
+		const payload = {
+			idLoan: id
+		};
+		// console.log(account);
 		const resServicesUser = await userServices.findUserByCreatorUserSK(payload);
 		const resServicesIdentityCard =
-			await identityServices.findAllIdentityByCreatorUser(payload);
+			await identityServices.findAllIdentityByCreatorUserSK(payload);
 		const resServicesFamilyPhone =
 			await familyPhoneServices.findAllFamilyPhoneByCreatorUserSK(payload);
 		const resServicesAccountBank =
-			await accountBankServices.findAllAccountBankByCreatorUser(payload);
+			await accountBankServices.findAllAccountBankByCreatorUserSK(payload);
 		let identityCardResult;
 		let userResult = resServicesUser.data;
 		let familyPhoneResult = resServicesFamilyPhone.data;
@@ -523,6 +536,7 @@ exports.getAllInFormationSK = async (req, res, next) => {
 		if (resServicesIdentityCard.data == null) identityCardResult = '';
 		if (resServicesFamilyPhone.data == null) familyPhoneResult = '';
 		if (resServicesAccountBank.data == null) accountBankResult = '';
+		let account = null
 		if (resServicesIdentityCard.data != null) {
 			console.log(resServicesIdentityCard.data);
 			let arr = [
@@ -531,10 +545,11 @@ exports.getAllInFormationSK = async (req, res, next) => {
 				resServicesIdentityCard.data.identityCardHold
 			];
 			let arrLink = [];
-			for (let i= 0;i<arr.length;i++) {
+			for (let i = 0; i < arr.length; i++) {
 				var upload = await uploadS3Services.getImageS3(arr[i]);
 				arrLink.push(upload);
 			}
+			account = await userServices.findAccountById(resServicesIdentityCard.data.creatorUser);
 			identityCardResult = {
 				arrLink: arrLink,
 				name: resServicesIdentityCard.data.name,
@@ -547,9 +562,9 @@ exports.getAllInFormationSK = async (req, res, next) => {
 			identityCardResult = '';
 		}
 		let resServices = {
-			idAccount: account.data._id,
-			phone: account.data.phone,
-			role: account.data.role,
+			idAccount: account ? account.data._id : null,
+			phone: account ? account.data.phone : null,
+			role: account ? account.data.role : null,
 			user: userResult,
 			identityCard: identityCardResult,
 			familyPhone: familyPhoneResult,

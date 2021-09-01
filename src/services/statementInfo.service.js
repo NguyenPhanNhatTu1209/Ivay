@@ -10,7 +10,7 @@ const SK_BANK = require('../models/SKAccountBank.model')
 
 
 
-exports.cloneData = async (id) => {
+exports.cloneData = async (id, idLoan) => {
   //user
   const user = await userService.findUserByCreatorUser({
     creatorUser: id
@@ -31,23 +31,25 @@ exports.cloneData = async (id) => {
 
   const payloadUser = JSON.parse(JSON.stringify(user.data))
   payloadUser.creatorUser = id
+  payloadUser.idLoan = idLoan
   delete payloadUser._id
 
   const skUser = new SK_USER(payloadUser)
   await skUser.save()
-  const payloadBank =  JSON.parse(JSON.stringify(accountBank.data))
+  const payloadBank = JSON.parse(JSON.stringify(accountBank.data))
   delete payloadBank._id
   payloadBank.creatorUser = id
-
+  payloadBank.idLoan = idLoan
 
   const skBank = new SK_BANK(payloadBank)
   await skBank.save()
 
-  const payloadFP =  JSON.parse(JSON.stringify(family.data))
- 
+  const payloadFP = JSON.parse(JSON.stringify(family.data))
+
 
   for (fp of payloadFP) {
     fp.creatorUser = id
+    fp.idLoan = idLoan
     delete fp._id
     const skFP = new SK_FAMILY_PHONE(fp)
     await skFP.save()
@@ -57,7 +59,7 @@ exports.cloneData = async (id) => {
   const payloadID = JSON.parse(JSON.stringify(identity.data))
   delete payloadID._id
   payloadID.creatorUser = id
-
+  payloadID.idLoan = idLoan
   const skIC = new SK_IdentityCard(payloadID)
   await skIC.save()
 

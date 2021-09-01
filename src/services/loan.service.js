@@ -1,11 +1,13 @@
 const ACCOUNT = require('../models/Account.model')
 const LOAN = require('../models/Loan.model')
 const TYPE_LOAN = require('../models/TypeLoan.model')
-const { cloneData } = require('./statementInfo.service')
-const userService=require('./user.services')
-const familyService=require('./familyPhone.service')
-const accountBankService=require('./accountBank.service')
-const identityService=require('./identityCard.service')
+const {
+  cloneData
+} = require('./statementInfo.service')
+const userService = require('./user.services')
+const familyService = require('./familyPhone.service')
+const accountBankService = require('./accountBank.service')
+const identityService = require('./identityCard.service')
 
 exports.createLoanAsync = async (payload) => {
   try {
@@ -29,13 +31,12 @@ exports.createLoanAsync = async (payload) => {
         creatorUser: payload.creatorUser
       })
       //identity
-    
+
       const identity = await identityService.findAllIdentityByCreatorUser({
         creatorUser: payload.creatorUser
       })
 
-      if(user.success&&family.success&&accountBank.success&&identity.success)
-      {
+      if (user.success && family.success && accountBank.success && identity.success) {
         const typeLoan = await TYPE_LOAN.findById(payload.typeLoan)
         if (typeLoan) {
           const endTime = new Date().setMonth(new Date().getMonth() - Number(typeLoan.monthLoan))
@@ -49,7 +50,7 @@ exports.createLoanAsync = async (payload) => {
           }
           const loan = new LOAN(body)
           await loan.save()
-          await cloneData(payload.creatorUser)
+          await cloneData(payload.creatorUser, loan._id)
           return {
             message: 'Successfully accept loan',
             success: true,
@@ -66,7 +67,7 @@ exports.createLoanAsync = async (payload) => {
         message: 'Please enter more info',
         success: false,
       }
-      
+
     }
     return {
       message: 'Pay off your debt and then borrow it',
@@ -101,7 +102,22 @@ exports.findAllLoanByStatusAsync = async (status, query) => {
       const obj = JSON.parse(JSON.stringify(loan))
       obj.phone = user.phone
       const typeLoan = await TYPE_LOAN.findById(loan.typeLoan)
-      obj.nameLoan = typeLoan.nameLoan
+      const objTypeLoan = JSON.parse(JSON.stringify(typeLoan))
+      delete objTypeLoan._id
+      delete objTypeLoan.createdAt
+      delete objTypeLoan.updatedAt
+      delete objTypeLoan.__v
+
+      obj.typeLoan = objTypeLoan
+      const inter = objTypeLoan.interestRate / 12
+      const PV = loan.totalLoanAmount
+      const tienLai = PV * inter
+
+      const a = PV / objTypeLoan.monthLoan
+
+      obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000
+      obj.totalDebit = obj.monthlyPaymentAmount * objTypeLoan.monthLoan
+
       result.push(obj)
 
     }

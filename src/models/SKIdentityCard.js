@@ -11,7 +11,8 @@ const SK_IDENTITY_CARD = new Schema({
     identityCardHold:defaultModel.string,
     identityCardTB:defaultModel.string,
     name:defaultModel.string,
-    numberCard:defaultModel.string
+    numberCard:defaultModel.string,
+    idLoan:defaultModel.stringRef
     
 },{timestamps:true})
 
