@@ -104,17 +104,17 @@ exports.chatMessage = async (socket, data) => {
 			})
 			console.log(newArr);
 			console.log(user1)
-			pushMultipleNotification(`Tin nhắn từ ${user1.phone}`,`${message.data.content}`,'',datafcm,newArr);
+			pushMultipleNotification(`Tin nhắn từ ${user1.phone}`,`${message.data.message}`,'',datafcm,newArr);
 		} else if (user.role === 1) {
 			console.log('Admin');
 			const deviceUser = await DEVICE.find({creatorUser: socket.Room});
-			const datafcm = converObjectFieldString(
+			const datafcm = convertObjectFieldString(
 				Object.assign(dataMessage)
 			);
 			var newArr = deviceUser.map((val) => {
 				return val.fcm;
 			})
-			pushMultipleNotification(`CSKH Trực Tuyến`,`${message.data.content}`,'',datafcm,newArr);
+			pushMultipleNotification(`CSKH Trực Tuyến`,`${message.data.message}`,'',datafcm,newArr);
 		}
 	} else {
 		sockets.emitToSocketId(socket.id, defaultChatSocket.sendMessageSSC, {
