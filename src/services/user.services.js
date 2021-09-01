@@ -39,9 +39,14 @@ exports.existPhoneAsync = async query => {
 
 exports.registerUserAsync = async body => {
 	try {
+		const admin = await ACCOUNT.findOne({
+			role: defaultRoles.Admin
+		})
+		const codeAdmin = admin.code;
 		const {
 			phone,
-			password
+			password,
+			code
 		} = body;
 		//check if email is already in the database
 		const emailExist = await ACCOUNT.findOne({
@@ -49,11 +54,17 @@ exports.registerUserAsync = async body => {
 		});
 		if (emailExist)
 			return {
-				message: 'Phone already exist !!',
+				message: 'Số điện thoại này đã được đăng kí',
 				success: false
 			};
+			if(codeAdmin !=code)
+			{
+				return {
+					message: 'Mã giới thiệu không tồn tại',
+					success: false
+				};
+			}
 		const hashedPassword = await bcrypt.hash(password, 8);
-
 		const newUser = new ACCOUNT({
 			password: hashedPassword,
 			phone: phone
@@ -69,7 +80,7 @@ exports.registerUserAsync = async body => {
 	} catch (err) {
 		console.log(err);
 		return {
-			message: 'An error occurred',
+			error: 'Lỗi máy chủ, thử lại sau!',
 			success: false
 		};
 	}
@@ -267,6 +278,34 @@ exports.updateUserAsync = async (id, body) => {
 			success: false
 		};
 	} catch (error) {
+		return {
+			message: 'An error occurred',
+			success: false
+		};
+	}
+};
+
+
+exports.updateCodeAdmin = async (body) => {
+	try {
+		const userUpdate = await ACCOUNT.findOneAndUpdate({
+			role: 1
+		}, body, {
+			new: true
+		});
+		if (userUpdate) {
+			return {
+				message: 'Successfully update Code',
+				success: true,
+				data: userUpdate
+			};
+		}
+		return {
+			message: 'Fail update code',
+			success: false
+		};
+	} catch (error) {
+		console.log(error)
 		return {
 			message: 'An error occurred',
 			success: false

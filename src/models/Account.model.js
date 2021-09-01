@@ -8,7 +8,7 @@ const ACCOUNT = new Schema({
   phone:defaultModel.stringPhone,
   verify:defaultModel.number,
   role:defaultModel.number,
-    
+  code:defaultModel.string
 },{timestamps:true})
 
 module.exports = mongoose.model('ACCOUNT', ACCOUNT)

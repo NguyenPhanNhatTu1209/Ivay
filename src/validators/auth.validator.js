@@ -4,6 +4,7 @@ const schemas = {
   register: joi.object().keys({
     phone: joi.string().required(),
     password: joi.string().min(6).required(),
+    code: joi.string().required()
   }),
 
   login: joi.object().keys({

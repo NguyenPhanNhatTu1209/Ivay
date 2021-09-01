@@ -1,5 +1,5 @@
 const express = require('express')
-const authRoute = require('./authRoute')
+const authRoute = require('./auth.Route')
 const useRoute = require('./userRoute')
 const loanRoute=require('./loan.route')
 const chatRoute=require('./chatRoute')

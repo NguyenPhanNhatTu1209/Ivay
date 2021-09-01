@@ -5,7 +5,9 @@ const SchemaValidateUser = require("../validators/user.validator")
 var multer = require("multer");
 const path = require("path");
 const Validate = require("../validators")
-const jwtServices = require("../services/jwt.services")
+const jwtServices = require("../services/jwt.services");
+const { checkRole } = require('../middleware/checkRole.middleware');
+const { defaultRoles } = require('../config/defineModel');
 const router = express.Router()
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -26,7 +28,7 @@ router.post('/updateUser', jwtServices.verify,Validate.body(SchemaValidateUser.u
 router.post('/updateImage', jwtServices.verify,cpUpload, Controller.updateImageAsync)
 router.get('/findAllUser', jwtServices.verify,Controller.findAllUserAsync)
 router.get('/searchUser/:id', jwtServices.verify,Validate.param(SchemaValidateAuth.searchUser,'id'), Controller.searchUserAsync)
-
+router.get('/updateCode', jwtServices.verify,checkRole([defaultRoles.Admin]), Controller.updateCodeAdminAsync);
 
 
 module.exports = router
