@@ -17,4 +17,5 @@ router.put('/updateStepAccountBank', jwtServices.verify,Validate.body(SchemaVali
 router.post('/createStepFamilyPhone', jwtServices.verify,Validate.body(SchemaValidateAuth.createFamilyPhone), Controller.createStepFamilyPhone)
 router.put('/updateStepFamilyPhone', jwtServices.verify,Validate.body(SchemaValidateAuth.updateFamilyPhone), Controller.updateStepFamilyPhone)
 router.get('/getInformation', jwtServices.verify, Controller.getAllInformationUser)
+router.get('/getInformationSK', jwtServices.verify,checkRole([defaultRoles.Admin]), Controller.getAllInFormationSK)
 module.exports = router

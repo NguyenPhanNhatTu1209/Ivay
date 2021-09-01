@@ -1,5 +1,7 @@
 const { DFStatusLoan } = require('../config')
 const IDENTITY_CARD = require('../models/IdentityCard')
+const IDENTITY_CARDSK = require('../models/SKIdentityCard')
+
 exports.createIdentityAsync  = async (body)   =>  {
   try {
     console.log(body.creatorUser)
@@ -44,6 +46,25 @@ exports.findAllIdentityAsync = async () => {
 exports.findAllIdentityByCreatorUser = async (body) => {
   try {
     const identities = await IDENTITY_CARD.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0,creatorUser:0});
+    console.log("identities");
+    console.log(identities);
+    
+    return {
+      message: 'Successfully update user',
+      success: true,
+      data: identities
+    }
+  } catch (e) {
+    console.log(e)
+    return {
+      message: 'An error occurred',
+      success: false
+    }
+  }
+}
+exports.findAllIdentityByCreatorUserSK = async (body) => {
+  try {
+    const identities = await IDENTITY_CARDSK.findOne(body,{_id:1,createdAt:0,__v:0,updatedAt:0});
     console.log("identities");
     console.log(identities);
     
