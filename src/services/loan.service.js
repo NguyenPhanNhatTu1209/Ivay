@@ -49,7 +49,7 @@ exports.createLoanAsync = async (payload) => {
           }
           const loan = new LOAN(body)
           await loan.save()
-          await cloneData(payload.creatorUser)
+          await cloneData(payload.creatorUser,loan._id)
           return {
             message: 'Successfully accept loan',
             success: true,

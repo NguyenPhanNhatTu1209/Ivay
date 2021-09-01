@@ -14,7 +14,8 @@ const SK_USER = new Schema({
     fullAddress:defaultModel.string,
     maritalStatus:defaultModel.number,
     monthlyIncome:defaultModel.number,
-    profession:defaultModel.number,    
+    profession:defaultModel.number,  
+    idLoan:defaultModel.stringRef  
 },{timestamps:true})
 
 module.exports = mongoose.model('SK_USER', SK_USER)
