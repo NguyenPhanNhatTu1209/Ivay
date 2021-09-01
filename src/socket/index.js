@@ -18,7 +18,7 @@ exports.emitOverChannel = (eventName, data) => {
 
 exports.emitRoom = (roomId, eventName, data) => {
   console.log(`Emit Room ${roomId}_${eventName}`, data);
-  global.io.sockets.in(roomId).emit(eventName, data);
+  global.io.sockets.to(roomId).emit(eventName, data);
 };
 
 exports.findUserById = (socketId) => {
