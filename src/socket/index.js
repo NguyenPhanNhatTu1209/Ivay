@@ -81,7 +81,7 @@ exports.init = async () => {
       if (!device) {
         data.fcm = user.fcm;
         data.statusDevice = 1;
-        data.creatorUser = account._id;
+        data.creatorUser = user.userId;
         await DEVICE.create(data);
       }
     });
