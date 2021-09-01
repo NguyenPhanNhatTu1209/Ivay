@@ -511,6 +511,7 @@ exports.getAllInformationUser = async (req, res, next) => {
 		return controller.sendError(res);
 	}
 };
+
 exports.getAllInFormationSK = async (req, res, next) => {
 	try {
 		const id = req.query.id;

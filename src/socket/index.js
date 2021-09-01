@@ -58,10 +58,7 @@ exports.init = async () => {
                 userId: decodedFromToken.data.id,
                 role: account.role,
               });
-              console.log(
-                `IVAY CCU: `,
-                global.listUser.length,
-              );
+              console.log(`IVAY CCU: `, global.listUser.length);
             }
           }
         }
@@ -70,13 +67,17 @@ exports.init = async () => {
 
     socket.on("UPDATE_DEVICE_CSS", async (data) => {
       const user = this.findUserBySocket(socket.id);
-      const device = await DEVICE.findOneAndUpdate({
-        deviceUUid: data.deviceUUid,
-        creatorUser: user.userId,
-      }, {
-        statusDevice: 1,
-        fcm: user.fcm,
-      }, {new: true},);
+      const device = await DEVICE.findOneAndUpdate(
+        {
+          deviceUUid: data.deviceUUid,
+          creatorUser: user.userId,
+        },
+        {
+          statusDevice: 1,
+          fcm: user.fcm,
+        },
+        { new: true }
+      );
       if (!device) {
         data.fcm = user.fcm;
         data.statusDevice = 1;
@@ -90,7 +91,7 @@ exports.init = async () => {
       await DEVICE.findOneAndUpdate(
         {
           deviceUUid: data.deviceUUid,
-          creatorUser: user.id,
+          creatorUser: user.userId,
           statusDevice: 1,
         },
         { statusDevice: 0 }
