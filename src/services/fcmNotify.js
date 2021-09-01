@@ -82,4 +82,4 @@ const pushMultipleNotification = async (
     console.log(err);
   }
 };
-module.exports = { pushNotification };
+module.exports = { pushNotification, pushMultipleNotification };
