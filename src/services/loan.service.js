@@ -12,6 +12,9 @@ const {
   DFStatusLoan
 } = require('../config')
 const DEVICE = require('../models/Device.model')
+const {
+  calcPrice
+} = require('../helper')
 
 exports.createLoanAsync = async (payload) => {
   try {
@@ -125,14 +128,9 @@ exports.findAllLoanByStatusAsync = async (status, query) => {
       delete objTypeLoan.__v
 
       obj.typeLoan = objTypeLoan
-      const inter = objTypeLoan.interestRate / 12
-      const PV = loan.totalLoanAmount
-      const tienLai = PV * inter
-
-      const a = PV / objTypeLoan.monthLoan
-
-      obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000
-      obj.totalDebit = obj.monthlyPaymentAmount * objTypeLoan.monthLoan
+      const calc = calcPrice(loan.totalLoanAmount, objTypeLoan.monthLoan, objTypeLoan.interestRate)
+      obj.monthlyPaymentAmount = calc.monthlyPaymentAmount
+      obj.totalDebit = calc.totalDebit
 
       result.push(obj)
 
@@ -172,14 +170,10 @@ exports.findAllLoanAsync = async (query = "") => {
       })
       obj.typeLoan = typeLoan
 
-      const inter = typeLoan.interestRate / 12
-      const PV = loan.totalLoanAmount
-      const tienLai = PV * inter
+      const calc = calcPrice(loan.totalLoanAmount, typeLoan.monthLoan, typeLoan.interestRate)
+      obj.monthlyPaymentAmount = calc.monthlyPaymentAmount
+      obj.totalDebit = calc.totalDebit
 
-      const a = PV / typeLoan.monthLoan
-
-      obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000
-      obj.totalDebit = obj.monthlyPaymentAmount * typeLoan.monthLoan
       result.push(obj)
     }
     return {
@@ -206,14 +200,9 @@ exports.findLoanByIdAsync = async (id) => {
     })
     obj.typeLoan = typeLoan
 
-    const inter = typeLoan.interestRate / 12
-    const PV = loan.totalLoanAmount
-    const tienLai = PV * inter
-
-    const a = PV / typeLoan.monthLoan
-
-    obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000
-    obj.totalDebit = obj.monthlyPaymentAmount * typeLoan.monthLoan
+    const calc = calcPrice(loan.totalLoanAmount, typeLoan.monthLoan, typeLoan.interestRate)
+    obj.monthlyPaymentAmount = calc.monthlyPaymentAmount
+    obj.totalDebit = calc.totalDebit
     return {
       message: 'Successfully findLoanByIdAsync',
       success: true,
