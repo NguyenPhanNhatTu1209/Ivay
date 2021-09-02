@@ -15,6 +15,7 @@ const DEVICE = require('../models/Device.model')
 const {
   calcPrice
 } = require('../helper')
+const { pushMultipleNotification } = require('./fcmNotify')
 
 exports.createLoanAsync = async payload => {
 	try {

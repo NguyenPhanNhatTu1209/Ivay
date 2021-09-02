@@ -1,6 +1,7 @@
 const {
   DFStatusTypeLoan
 } = require('../config')
+const { calcPrice } = require('../helper')
 const TYPE_LOAN = require('../models/TypeLoan.model')
 exports.createTypeLoanAsync = async (body) => {
   try {
@@ -89,21 +90,11 @@ exports.findTypeLoanClientAsync = async (query) => {
     const result = []
     for (loan of typeLoans) {
       const obj = JSON.parse(JSON.stringify(loan))
-
-      const inter = loan.interestRate / 12
-      const PV = query.money
-      const tienLai = PV * inter
-
-      const a = query.money / loan.monthLoan
-      // const IRR = inter / 100
-
+      const calc = calcPrice(query.money, loan.monthLoan, loan.interestRate)
+      obj.monthlyPaymentAmount = calc.monthlyPaymentAmount
+      obj.totalDebit = calc.totalDebit
       obj.startTime = new Date()
       obj.endTime = new Date(new Date().setMonth(new Date().getMonth() + Number(loan.monthLoan)))
-
-      // const PMT = (PV * IRR) / (1 - ((1 + IRR) ** (-loan.monthLoan)))
-      // const INTERATE = (100 + inter) / 100
-      obj.monthlyPaymentAmount = Math.ceil((a + tienLai) / 1000) * 1000
-      obj.totalDebit = obj.monthlyPaymentAmount * loan.monthLoan
 
       result.push(obj)
     }

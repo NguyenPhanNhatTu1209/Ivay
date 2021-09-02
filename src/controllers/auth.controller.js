@@ -36,9 +36,6 @@ exports.exitsPhoneAsync = async (req, res, next) => {
 exports.registerAsync = async (req, res, next) => {
 	try {
 		const resServices = await authServices.registerUserAsync(req.value.body);
-		const admin = await ACCOUNT.findOne({
-			role: defaultRoles.Admin
-		})
 		if (!resServices.success)
 			return controller.sendSuccess(
 				res,
@@ -46,7 +43,6 @@ exports.registerAsync = async (req, res, next) => {
 				300,
 				resServices.message
 			);
-
 		return controller.sendSuccess(
 			res,
 			resServices.data,
@@ -55,6 +51,47 @@ exports.registerAsync = async (req, res, next) => {
 		);
 	} catch (err) {
 		console.log(err);
+		return controller.sendError(res);
+	}
+};
+
+exports.loginAsync = async (req, res, next) => {
+	try {
+		const resServices = await authServices.loginAsync(req.value.body);
+		if (!resServices.success) {
+			return controller.sendSuccess(res, {}, 300, resServices.message);
+		}
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			200,
+			resServices.message
+		);
+	} catch (err) {
+		console.log(err)
+		return controller.sendError(res);
+	}
+};
+exports.updateCodeAdminAsync = async (req, res, next) => {
+	try {
+		const code = req.query.code; 
+		const resServices = await userServices.updateCodeAdmin({code: code});
+		if (!resServices.success) {
+			return controller.sendSuccess(
+				res,
+				resServices.success,
+				300,
+				resServices.message
+			);
+		}
+
+		return controller.sendSuccess(
+			res,
+			resServices.data,
+			200,
+			resServices.message
+		);
+	} catch (error) {
 		return controller.sendError(res);
 	}
 };
