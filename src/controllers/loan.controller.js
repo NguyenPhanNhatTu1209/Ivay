@@ -27,10 +27,6 @@ exports.createLoanAsync = async (req, res, next) => {
 				resServices.message
 			);
 
-		// const dataPush=Object.assign({},{action:"NEW_USER"},JSON.parse(JSON.stringify(resServices.data.user)))
-		// console.log(dataPush);
-		// pushNotification(`PT-Ship có khách hàng mới`,`Hãy đặt giá ship cho khách ngay nào`,"",converObjectFieldString(dataPush),admin.fcm)
-		// Push notification cho admin
 		return controller.sendSuccess(
 			res,
 			resServices.data,

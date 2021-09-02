@@ -1,7 +1,5 @@
-const { DFStatusLoan } = require('../config')
 const FAMILY_PHONE = require('../models/FamilyPhone.model')
 const FAMILY_PHONESK = require('../models/SKFamilyPhone.model')
-const { updateUserAsync } = require('./user.services')
 exports.createFamilyPhoneAsync = async (body) => {
   try {
     const familyPhone = new FAMILY_PHONE(body)

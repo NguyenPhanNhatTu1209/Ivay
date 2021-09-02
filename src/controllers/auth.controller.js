@@ -11,8 +11,10 @@ const {
 
 exports.exitsPhoneAsync = async (req, res, next) => {
 	try {
-		const phone=req.query.phone
-		const resServices = await userServices.existPhoneAsync({phone});
+		const phone = req.query.phone
+		const resServices = await userServices.existPhoneAsync({
+			phone
+		});
 		if (!resServices.success)
 			return controller.sendSuccess(
 				res,
@@ -44,11 +46,6 @@ exports.registerAsync = async (req, res, next) => {
 				300,
 				resServices.message
 			);
-		// const dataPush = Object.assign({}, {
-		// 	action: "NEW_USER"
-		// }, JSON.parse(JSON.stringify(resServices.data.user)))
-		// console.log(dataPush);
-		// pushNotification(`PT-Ship có khách hàng mới`, `Hãy đặt giá ship cho khách ngay nào`, "", converObjectFieldString(dataPush), admin.fcm)
 
 		return controller.sendSuccess(
 			res,
@@ -150,7 +147,6 @@ exports.updateUserAsync = async (req, res, next) => {
 			decodeToken
 		} = req.value.body;
 		const id = decodeToken.data.id;
-		console.log(`LHA:  ===> file: auth.controller.js ===> line 56 ===> id`, id);
 		let bodyUser = {
 			academicLevel: req.value.body.academicLevel,
 			companyName: req.value.body.companyName,
@@ -183,7 +179,6 @@ exports.updateUserAsync = async (req, res, next) => {
 
 exports.updateImageAsync = async (req, res, next) => {
 	try {
-		console.log("abc");
 		const {
 			decodeToken
 		} = req.value.body;

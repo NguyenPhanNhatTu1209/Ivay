@@ -1,4 +1,3 @@
-const { DFStatusLoan } = require('../config')
 const IDENTITY_CARD = require('../models/IdentityCard')
 const IDENTITY_CARDSK = require('../models/SKIdentityCard')
 

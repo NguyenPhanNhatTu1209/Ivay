@@ -4,11 +4,7 @@ const identityServices = require('../services/identityCard.service');
 const accountBankServices = require('../services/accountBank.service');
 const familyPhoneServices = require('../services/familyPhone.service');
 const userServices = require('../services/user.services');
-userServices;
 const uploadS3Services = require('../services/uploadS3.service');
-const {
-	defaultRoles
-} = require('../config/defineModel');
 
 exports.findUserByIdAsync = async (req, res, next) => {
 	try {
@@ -499,12 +495,6 @@ exports.getAllInformationUser = async (req, res, next) => {
 			200,
 			'Get Infomation User Success'
 		);
-		// return controller.sendSuccess(
-		// 	res,
-		// 	resServices.data,
-		// 	300,
-		// 	resServices.message
-		// );
 	} catch (error) {
 		// bug
 		console.log(error);
@@ -577,12 +567,6 @@ exports.getAllInFormationSK = async (req, res, next) => {
 			200,
 			'Get Infomation User Success'
 		);
-		// return controller.sendSuccess(
-		// 	res,
-		// 	resServices.data,
-		// 	300,
-		// 	resServices.message
-		// );
 	} catch (error) {
 		// bug
 		console.log(error);

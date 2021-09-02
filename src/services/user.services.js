@@ -4,9 +4,6 @@ const ACCOUNT = require('../models/Account.model');
 const bcrypt = require('bcryptjs');
 const jwtServices = require('./jwt.services');
 const {
-	defaultRoles
-} = require('../config/defineModel');
-const {
 	DFRole
 } = require('../config');
 
@@ -249,7 +246,6 @@ exports.changePasswordAsync = async (id, body) => {
 
 exports.updateUserAsync = async (id, body) => {
 	try {
-		console.log(id)
 		const userUpdate = await USER.findOneAndUpdate({
 			creatorUser: id
 		}, body, {

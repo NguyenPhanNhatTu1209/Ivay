@@ -11,7 +11,6 @@ exports.uploadImageS3 = async (body,expires = 300) => {
 			accessKeyId: configEnv.AWS_ACCESS_KEY,
 			secretAccessKey: configEnv.AWS_SECRET_KEY,
 			region: configEnv.REGION,
-			// endpoint: 'lambiengcode.tk', 
 		});
 		const s3Params = {
 			Bucket: configEnv.BUCKET,
@@ -34,7 +33,6 @@ exports.getImageS3 = async (body,expires = 60*60) => {
 			accessKeyId: configEnv.AWS_ACCESS_KEY,
 			secretAccessKey: configEnv.AWS_SECRET_KEY,
 			region: configEnv.REGION,
-			// endpoint: 'lambiengcode.tk', 
 		});
 		const s3Params = {
 			Bucket: configEnv.BUCKET,
